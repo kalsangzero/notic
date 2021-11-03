@@ -2,6 +2,7 @@ import { css, jsx } from '@emotion/react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
+import BookmarkDisplay from '../Component/BookmarkDisplay';
 import ResponsivePlayer from '../Component/ResponsivePlayer';
 
 const videoPage = css`
@@ -38,6 +39,7 @@ export default function Home() {
   const [noteName, setNoteName] = useState('Note');
   const [timeMark, setTimeMark] = useState('TimeMark');
   const [url, setUrl] = useState('https://youtu.be/t6MXHczeEqc');
+  const [bookmarks, setBookmarks] = useState([]);
   return (
     <div>
       <Head>
@@ -67,8 +69,12 @@ export default function Home() {
               />
             </label>
             <button>Save</button>
+            <Link href="/users">
+              <a>Marketplace</a>
+            </Link>
           </form>
         </div>
+        <BookmarkDisplay bookmark={bookmarks} setBookmarks={setBookmarks} />
       </div>
     </div>
   );

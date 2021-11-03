@@ -66,15 +66,17 @@ export default function ResponsivePlayer(props) {
   const handleSeekChange = (e) => {
     setPlayed(parseFloat(e.target.value));
   };
-  const handleSeekMouseDown = (e) => {
-    setSeeking(true);
-  };
+  console.log('handle progress', played);
 
   const handleSeekMouseUp = (e) => {
     setSeeking(false);
     playerRef.current.seekTo(parseFloat(e.target.value, 'fraction'));
   };
+  const handleSeekMouseDown = (e) => {
+    setSeeking(true);
+  };
 
+  const addBookmark = () => {};
   const currentTime =
     playerRef && playerRef.current
       ? playerRef.current.getCurrentTime()
@@ -115,13 +117,20 @@ export default function ResponsivePlayer(props) {
           },
           youtube: {
             playerVars: {
+              autoplay: 0,
+              controls: 0,
+              rel: 0,
+              fs: 0,
               showinfo: 0,
+              modestbranding: 1,
+              enablejsapi: 1,
               disablekb: 1,
               iv_load_policy: 3,
-              listlistType: 'search',
-              modestbranding: 1,
+              listType: 'search',
+
               start: { currentState },
-              controls: 0,
+
+              origin: 'http://localhost:3000/',
             },
           },
         }}
@@ -130,11 +139,11 @@ export default function ResponsivePlayer(props) {
       <div css={controlsWrapper}>
         <div>
           <input
-            style={{ width: '800px', paddingTop: '3px' }}
+            style={{ width: '800px', marginBottom: '3px' }}
             type="range"
             min={0}
             max={duration}
-            step="any"
+            step={1}
             value={played}
             onMouseDown={handleSeekMouseDown}
             onChange={handleSeekChange}
