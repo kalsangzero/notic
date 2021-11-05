@@ -5,6 +5,7 @@ import { hashPassword } from '../../util/auth';
 // import { verifyCsrfToken } from '../../util/csrf';
 import {
   getUserWithPasswordHashByUsername,
+  insertProfile,
   insertUser,
   User,
 } from '../../util/database';
@@ -33,6 +34,12 @@ export default async function registerHandler(
     });
     return;
   }
+  if (!req.body.firstname || !req.body.lastname) {
+    res.status(400).send({
+      errors: [{ message: 'Please insert First and Last names' }],
+    });
+    return; // return right away
+  }
   // if (!req.body.csrfToken || !verifyCsrfToken(req.body.csrfToken)) {
   //   res.status(400).send({
   //     errors: [{ message: 'Request does not contain valid CSRF token' }],
@@ -59,6 +66,12 @@ export default async function registerHandler(
       passwordHash: passwordHash,
     });
 
+    const firstname = req.body.firstname;
+    const lastname = req.body.lastname;
+    const profile = await insertProfile({
+      firstname: firstname,
+      lastname: lastname,
+    });
     //   // clean old sessions
     //   deleteExpiredSessions();
 
@@ -66,7 +79,10 @@ export default async function registerHandler(
       res.status(500).send({ errors: [{ message: 'User not create' }] });
       return;
     }
-
+    if (!profile) {
+      res.status(500).send({ errors: [{ message: 'User not create' }] });
+      return;
+    }
     //   // Create the record in the sessions table with a new token
 
     //   // 1. create the token

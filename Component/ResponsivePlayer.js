@@ -8,7 +8,7 @@ import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { findDOMNode } from 'react-dom';
 import ReactPlayer from 'react-player/lazy';
 
@@ -31,12 +31,9 @@ const controlsWrapper = css`
 `;
 
 export default function ResponsivePlayer(props) {
-  const playerRef = useRef();
   const [currentState, setCurrentState] = useState(0);
   const [paused, setPaused] = useState(false);
   const [muted, setMuted] = useState(false);
-  const [played, setPlayed] = useState(0);
-
   const [volume, setVolume] = useState(0.5);
   const [seeking, setSeeking] = useState(false);
 
@@ -55,33 +52,29 @@ export default function ResponsivePlayer(props) {
     setVolume(parseFloat(newValue / 100, newValue === 0 ? true : false));
   };
   const handleProgress = (changeState) => {
-    console.log('onProgress', changeState);
     // We only want to update time slider if we are not currently seeking
     if (!seeking) {
       setCurrentState(changeState);
     }
   };
-  console.log(currentState);
 
   const handleSeekChange = (e) => {
-    setPlayed(parseFloat(e.target.value));
+    setCurrentState(parseFloat(e.target.value));
   };
-  console.log('handle progress', played);
 
   const handleSeekMouseUp = (e) => {
     setSeeking(false);
-    playerRef.current.seekTo(parseFloat(e.target.value, 'fraction'));
+    props.playerRef.current.seekTo(parseFloat(e.target.value, 'fraction'));
   };
   const handleSeekMouseDown = (e) => {
     setSeeking(true);
   };
 
-  const addBookmark = () => {};
   const currentTime =
-    playerRef && playerRef.current
-      ? playerRef.current.getCurrentTime()
+    props.playerRef && props.playerRef.current
+      ? props.playerRef.current.getCurrentTime()
       : '00:00';
-  console.log('currentTime', currentTime);
+
   const theme = useTheme();
 
   const mainIconColor = theme.palette.mode === 'dark' ? '#fff' : '#000';
@@ -91,14 +84,14 @@ export default function ResponsivePlayer(props) {
     const secondLeft = value - minute * 60;
     return `${minute}:${secondLeft < 9 ? `0${secondLeft}` : secondLeft}`;
   }
-  const duration = playerRef.current
-    ? playerRef.current.getDuration()
+  const duration = props.playerRef.current
+    ? props.playerRef.current.getDuration()
     : Number('00:00');
 
   return (
     <div css={playerWrapper}>
       <ReactPlayer
-        ref={playerRef}
+        ref={props.playerRef}
         url={props.url}
         width="100%"
         height="100%"
@@ -139,22 +132,21 @@ export default function ResponsivePlayer(props) {
       <div css={controlsWrapper}>
         <div>
           <input
-            style={{ width: '800px', marginBottom: '3px' }}
+            style={{ width: '800px' }}
             type="range"
             min={0}
             max={duration}
             step={1}
-            value={played}
+            value={currentState.playedSeconds}
             onMouseDown={handleSeekMouseDown}
             onChange={handleSeekChange}
             onMouseUp={handleSeekMouseUp}
           />
-          <Box
-            sx={{
+          <div
+            style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              mt: -2,
             }}
           >
             <span>
@@ -204,7 +196,7 @@ export default function ResponsivePlayer(props) {
               {formatDuration(Math.round(currentTime))}/
               {formatDuration(Math.round(duration))}
             </p>
-          </Box>
+          </div>
         </div>
         <button
           style={{
@@ -214,6 +206,7 @@ export default function ResponsivePlayer(props) {
             cursor: 'pointer',
             padding: '5px 10px',
           }}
+          onClick={props.addBookmark}
         >
           <BookmarkAddIcon />
         </button>

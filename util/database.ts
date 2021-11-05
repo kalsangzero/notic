@@ -10,9 +10,21 @@ export type User = {
   id: number;
   username: string;
 };
+export type Profile = {
+  id: number;
+  firstname: string;
+  lastname: string;
+};
 
 export type UserWithPasswordHash = User & {
   password_hash: string;
+};
+
+export type Session = {
+  id: number;
+  token: string;
+  userId: number;
+  expiryTimestamp: Date;
 };
 
 dotenvSafe.config();
@@ -82,4 +94,38 @@ export async function insertUser({
 
   `;
   return user && camelcaseKeys(user);
+}
+
+export async function insertProfile({
+  firstname,
+  lastname,
+}: {
+  firstname: string;
+  lastname: string;
+}) {
+  const [profile] = await sql<[Profile | undefined]>`
+    INSERT INTO profile
+      (firstname, lastname)
+    VALUES
+      (${firstname}, ${lastname})
+    RETURNING
+      id,
+      firstname,
+      lastname
+
+  `;
+  return profile && camelcaseKeys(profile);
+}
+
+export async function createSession(token: string, userId: number) {
+  const [session] = await sql<[Session]>`
+    INSERT INTO sessions
+      (token, user_id)
+    VALUES
+      (${token}, ${userId})
+    RETURNING
+      *
+  `;
+
+  return camelcaseKeys(session);
 }

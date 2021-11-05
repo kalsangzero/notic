@@ -19,6 +19,7 @@
     "@types/dotenv-safe": "^8.1.2",
     "bcrypt": "^5.0.1",
     "camelcase-keys": "^7.0.1",
+    "cookie": "^0.4.1",
     "dotenv-cli": "^4.0.0",
     "dotenv-safe": "^8.2.0",
     "ley": "^0.7.1",

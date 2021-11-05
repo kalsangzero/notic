@@ -1,8 +1,12 @@
 import crypto from 'node:crypto';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { verifyPassword } from '../../util/auth';
-// import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
-import { getUserWithPasswordHashByUsername, User } from '../../util/database';
+import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
+import {
+  createSession,
+  getUserWithPasswordHashByUsername,
+  User,
+} from '../../util/database';
 import { Errors } from '../../util/types';
 
 export type LoginResponse = { errors: Errors } | { user: User };
@@ -10,6 +14,7 @@ export type LoginResponse = { errors: Errors } | { user: User };
 export default async function loginHandler(
   req: NextApiRequest,
   res: NextApiResponse<LoginResponse>,
+  // catchinng the response
 ) {
   if (!req.body.username || !req.body.password) {
     res.status(400).send({
@@ -24,6 +29,7 @@ export default async function loginHandler(
     const userWithPasswordHash = await getUserWithPasswordHashByUsername(
       username,
     );
+    // here u r calling database and asking are these username and passwordhash valid
 
     // Username doesn't match anything in the database
     if (!userWithPasswordHash) {
@@ -49,26 +55,24 @@ export default async function loginHandler(
     // // clean old sessions
     // deleteExpiredSessions();
 
-    // // Create the record in the sessions table with a new token
+    // Create the record in the sessions table with a new token
 
-    // // 1. create the token
-    // const token = crypto.randomBytes(64).toString('base64');
+    // 1. create the token (using crypto, which is already in node(no need to yarn add))
+    const token = crypto.randomBytes(64).toString('base64');
 
-    // // 2. do a DB query to add the session record
-    // const newSession = await createSession(token, userWithPasswordHash.id);
+    // 2. do a DB query to add the session record
+    const newSession = await createSession(token, userWithPasswordHash.id);
+    console.log('newSession', newSession);
+    // set the response to create the cookie in the browser (we need a library for that)
 
-    // // set the response to create the cookie in the browser
+    const cookie = createSerializedRegisterSessionTokenCookie(newSession.token);
 
-    // const cookie = createSerializedRegisterSessionTokenCookie(newSession.token);
-
-    // // Important! Removing the password
-    // // hash from the response sent back
-    // // to the user
+    // Important! Removing the password
+    // hash from the response sent back
+    // to the user
     const { passwordHash, ...user } = userWithPasswordHash;
 
-    /* .status(200).setHeader('Set-Cookie', cookie)*/
-
-    res.send({ user: user });
+    res.status(200).setHeader('Set-Cookie', cookie).send({ user: user });
   } catch (err) {
     res.status(500).send({ errors: [{ message: (err as Error).message }] });
   }
