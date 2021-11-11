@@ -21,8 +21,8 @@ const errorsStyles = css`
 export default function RegisterPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [firstname, setFirstname] = useState('');
-  const [lastname, setLastname] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [errors, setErrors] = useState<Errors>([]);
   const router = useRouter();
 
@@ -44,8 +44,8 @@ export default function RegisterPage() {
             body: JSON.stringify({
               username: username,
               password: password,
-              firstname: firstname,
-              lastname: lastname,
+              firstName: firstName,
+              lastName: lastName,
               // csrfToken: props.csrfToken,
             }),
           });
@@ -62,7 +62,7 @@ export default function RegisterPage() {
           const destination =
             typeof router.query.returnTo === 'string' && router.query.returnTo
               ? router.query.returnTo
-              : `/users/${registerJson.user.id}`;
+              : `/login`;
 
           // props.refreshUsername();
 
@@ -79,15 +79,15 @@ export default function RegisterPage() {
         <label>
           First Name
           <input
-            value={firstname}
-            onChange={(event) => setFirstname(event.currentTarget.value)}
+            value={firstName}
+            onChange={(event) => setFirstName(event.currentTarget.value)}
           />
         </label>
         <label>
           Last Name
           <input
-            value={lastname}
-            onChange={(event) => setLastname(event.currentTarget.value)}
+            value={lastName}
+            onChange={(event) => setLastName(event.currentTarget.value)}
           />
         </label>
         <label>

@@ -9,9 +9,6 @@ import postgres from 'postgres';
 export type User = {
   id: number;
   username: string;
-};
-export type Profile = {
-  id: number;
   firstname: string;
   lastname: string;
 };
@@ -79,42 +76,27 @@ export async function getUserWithPasswordHashByUsername(username: string) {
 export async function insertUser({
   username,
   passwordHash,
+  firstName,
+  lastName,
 }: {
   username: string;
   passwordHash: string;
+  firstName: string;
+  lastName: string;
 }) {
   const [user] = await sql<[User | undefined]>`
     INSERT INTO users
-      (username, password_hash)
+      (username, password_hash, first_name, last_name)
     VALUES
-      (${username}, ${passwordHash})
+      (${username}, ${passwordHash}, ${firstName}, ${lastName})
     RETURNING
       id,
-      username
+      username,
+      first_name,
+      last_name
 
   `;
   return user && camelcaseKeys(user);
-}
-
-export async function insertProfile({
-  firstname,
-  lastname,
-}: {
-  firstname: string;
-  lastname: string;
-}) {
-  const [profile] = await sql<[Profile | undefined]>`
-    INSERT INTO profile
-      (firstname, lastname)
-    VALUES
-      (${firstname}, ${lastname})
-    RETURNING
-      id,
-      firstname,
-      lastname
-
-  `;
-  return profile && camelcaseKeys(profile);
 }
 
 export async function createSession(token: string, userId: number) {

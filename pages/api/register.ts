@@ -5,7 +5,6 @@ import { hashPassword } from '../../util/auth';
 // import { verifyCsrfToken } from '../../util/csrf';
 import {
   getUserWithPasswordHashByUsername,
-  insertProfile,
   insertUser,
   User,
 } from '../../util/database';
@@ -34,7 +33,7 @@ export default async function registerHandler(
     });
     return;
   }
-  if (!req.body.firstname || !req.body.lastname) {
+  if (!req.body.firstName || !req.body.lastName) {
     res.status(400).send({
       errors: [{ message: 'Please insert First and Last names' }],
     });
@@ -51,7 +50,6 @@ export default async function registerHandler(
     const username = req.body.username;
 
     const existingUser = await getUserWithPasswordHashByUsername(username);
-
     if (existingUser) {
       res.status(400).send({
         errors: [{ message: 'Username already exists' }],
@@ -61,17 +59,16 @@ export default async function registerHandler(
 
     const passwordHash = await hashPassword(req.body.password);
 
+    const firstName = req.body.firstName;
+    const lastName = req.body.lastName;
+
     const user = await insertUser({
       username: username,
       passwordHash: passwordHash,
+      firstName: firstName,
+      lastName: lastName,
     });
 
-    const firstname = req.body.firstname;
-    const lastname = req.body.lastname;
-    const profile = await insertProfile({
-      firstname: firstname,
-      lastname: lastname,
-    });
     //   // clean old sessions
     //   deleteExpiredSessions();
 
@@ -79,10 +76,7 @@ export default async function registerHandler(
       res.status(500).send({ errors: [{ message: 'User not create' }] });
       return;
     }
-    if (!profile) {
-      res.status(500).send({ errors: [{ message: 'User not create' }] });
-      return;
-    }
+
     //   // Create the record in the sessions table with a new token
 
     //   // 1. create the token
@@ -95,7 +89,7 @@ export default async function registerHandler(
 
     //   const cookie = createSerializedRegisterSessionTokenCookie(newSession.token);
 
-    //   res.status(200).setHeader('set-Cookie', cookie).send({ user: user });
+    res.status(200).send({ user: user });
   } catch (err) {
     res.status(500).send({ errors: [{ message: (err as Error).message }] });
   }

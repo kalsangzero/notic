@@ -79,11 +79,6 @@ export default function ResponsivePlayer(props) {
 
   const mainIconColor = theme.palette.mode === 'dark' ? '#fff' : '#000';
 
-  function formatDuration(value) {
-    const minute = Math.floor(value / 60);
-    const secondLeft = value - minute * 60;
-    return `${minute}:${secondLeft < 9 ? `0${secondLeft}` : secondLeft}`;
-  }
   const duration = props.playerRef.current
     ? props.playerRef.current.getDuration()
     : Number('00:00');
@@ -193,8 +188,8 @@ export default function ResponsivePlayer(props) {
               />
             </span>
             <p>
-              {formatDuration(Math.round(currentTime))}/
-              {formatDuration(Math.round(duration))}
+              {props.formatDuration(Math.round(currentTime))}/
+              {props.formatDuration(Math.round(duration))}
             </p>
           </div>
         </div>

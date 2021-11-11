@@ -45,11 +45,7 @@ export default function Home() {
   const controlsRef = useRef();
   const canvasRef = useRef();
   const [bookmarks, setBookmarks] = useState([]);
-  const format = (seconds) => {
-    if (isNaN(seconds)) {
-      return `00:00`;
-    }
-  };
+
   const addBookmark = () => {
     const canvas = canvasRef.current;
     canvas.width = '160px';
@@ -65,6 +61,12 @@ export default function Home() {
     });
     setBookmarks(bookmarksCopy);
   };
+
+  function formatDuration(value) {
+    const minute = Math.floor(value / 60);
+    const secondLeft = value - minute * 60;
+    return `${minute}:${secondLeft < 9 ? `0${secondLeft}` : secondLeft}`;
+  }
   return (
     <div>
       <Head>
@@ -77,6 +79,7 @@ export default function Home() {
           url={url}
           playerRef={playerRef}
           addBookmark={addBookmark}
+          formatDuration={formatDuration}
         />
         <div css={formStyles}>
           <h1 style={{ margin: 0, paddingLeft: '10px' }}>{noteName}</h1>
@@ -119,7 +122,7 @@ export default function Home() {
             >
               <img crossOrigin="anonymous" src={bookmark.image} alt="d" />
               <Typography variant="body2" align="center">
-                bookmark at {format(bookmark.time)}
+                bookmark at {formatDuration(Math.round(bookmark.time))}
               </Typography>
             </Paper>
           </Grid>
