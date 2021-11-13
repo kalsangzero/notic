@@ -4,6 +4,7 @@ import { verifyPassword } from '../../util/auth';
 import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
 import {
   createSession,
+  deleteExpiredSessions,
   getUserWithPasswordHashByUsername,
   User,
 } from '../../util/database';
@@ -53,7 +54,7 @@ export default async function loginHandler(
     }
 
     // // clean old sessions
-    // deleteExpiredSessions();
+    deleteExpiredSessions();
 
     // Create the record in the sessions table with a new token
 

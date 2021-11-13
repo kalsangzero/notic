@@ -2,16 +2,17 @@ import { css } from '@emotion/react';
 import { GetServerSidePropsContext } from 'next';
 import Head from 'next/head';
 import { useState } from 'react';
+import Layout from '../../Component/Layout';
 
 export default function User(props) {
   return (
-    <div>
+    <Layout>
       <Head>
         <title>single user</title>
       </Head>
 
       <div>Personal user page of {props.user.username}</div>
-    </div>
+    </Layout>
   );
 }
 

@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import { useState } from 'react';
-// import Layout from '../components/Layout';
+import Layout from '../Component/Layout';
 import { Errors } from '../util/types';
 import { RegisterResponse } from './api/register';
 
@@ -16,9 +16,12 @@ const errorsStyles = css`
   color: red;
 `;
 
-// type Props = { refreshUsername: () => void; csrfToken: string };
+type Props = {
+  refreshUsername: () => void;
+  // csrfToken: string
+};
 
-export default function RegisterPage() {
+export default function RegisterPage(props: Props) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -27,8 +30,7 @@ export default function RegisterPage() {
   const router = useRouter();
 
   return (
-    // <Layout>
-    <div>
+    <Layout>
       <h1>Register</h1>
 
       <form
@@ -64,7 +66,7 @@ export default function RegisterPage() {
               ? router.query.returnTo
               : `/login`;
 
-          // props.refreshUsername();
+          props.refreshUsername();
 
           router.push(destination);
         }}
@@ -107,8 +109,7 @@ export default function RegisterPage() {
           <div key={`error-${error.message}`}>{error.message}</div>
         ))}
       </div>
-    </div>
-    // </Layout>
+    </Layout>
   );
 }
 
