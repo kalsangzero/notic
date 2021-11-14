@@ -1,3 +1,4 @@
+import { Bookmark } from '@mui/icons-material';
 import camelcaseKeys from 'camelcase-keys';
 import dotenvSafe from 'dotenv-safe';
 import postgres from 'postgres';
@@ -18,6 +19,14 @@ export type Video = {
   videoname: string;
   url: string;
   profileId: number;
+};
+
+export type Bookmark = {
+  id: number;
+  bookmarkname: string;
+  note: string;
+  videoId: number;
+  videoUrl: string;
 };
 export type UserWithPasswordHash = User & {
   password_hash: string;
@@ -245,7 +254,7 @@ export async function getVideo(id: number) {
   const [video] = await sql<[User]>`
       SELECT
       id,
-      videoname#
+      videoname
       FROM
       videos
       Where
@@ -299,4 +308,117 @@ export async function updateVideoById(
 
   `;
   return video && camelcaseKeys(video);
+}
+
+export async function insertBookmark({
+  bookmarkname,
+  time,
+  note,
+  videoId,
+  videoUrl,
+}: {
+  bookmarkname: string;
+  time: string;
+  note: string;
+  videoId: number;
+  videoUrl: string;
+}) {
+  const [bookmark] = await sql<[Bookmark | undefined]>`
+    INSERT INTO bookmarks
+      (bookmarkname, note, time, video_id, video_url)
+    VALUES
+      (${bookmarkname}, ${note},${time}, ${videoId}, ${videoUrl})
+    RETURNING
+      id,
+      bookmarkname,
+      note,
+      time,
+      video_id,
+      video_url
+  `;
+  return bookmark && camelcaseKeys(bookmark);
+}
+
+export async function getBookmarks() {
+  const bookmarks = await sql<Bookmark[]>`
+      SELECT
+         id,
+         bookmarkname
+      FROM
+         bookmarks;
+         `;
+  // console.log('proooo', products);
+  return bookmarks.map((bookmark) => {
+    return camelcaseKeys(bookmark);
+  });
+}
+
+export async function getBookmark(id: number) {
+  const [bookmark] = await sql<[Bookmark]>`
+      SELECT
+      id,
+      bookamrkname
+      FROM
+      videos
+      Where
+      id =${id}
+      `;
+  return camelcaseKeys(bookmark);
+}
+
+export async function deleteBookmarkById(id: number) {
+  const [bookmark] = await sql<[Bookmark | undefined]>`
+    DELETE FROM
+      videos
+    WHERE
+      id = ${id}
+    RETURNING
+    id,
+      bookmarkname,
+      time,
+      note,
+      video_id,
+      video_url
+
+  `;
+  return bookmark && camelcaseKeys(bookmark);
+}
+
+export async function updateBookmarkById(
+  id: number,
+  {
+    bookmarkname,
+    time,
+    note,
+    videoId,
+    videoUrl,
+  }: {
+    bookmarkname: string;
+    time: string;
+    note: string;
+    videoUrl: string;
+    videoId: number;
+  },
+) {
+  const [bookmark] = await sql<[Bookmark | undefined]>`
+    UPDATE
+      bookmarks
+    SET
+      bookmarkname = ${bookmarkname},
+      time = ${time},
+      note =${note},
+      video_id = ${videoId},
+      video_url=${videoUrl}
+    WHERE
+      id = ${id}
+    RETURNING
+      id,
+      bookmarkname,
+      time,
+      note,
+      video_id,
+      video_url
+
+  `;
+  return bookmark && camelcaseKeys(bookmark);
 }

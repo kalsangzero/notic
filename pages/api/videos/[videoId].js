@@ -16,7 +16,7 @@ export default async function handler(req, res) {
   } else if (req.method === 'DELETE') {
     console.log('query', req.query);
     // the code for the POST request
-    const deletedVideo = await deleteVideoById(Number(req.query.userId));
+    const deletedVideo = await deleteVideoById(Number(req.query.videoId));
 
     return res.status(200).json(deletedVideo);
   } else if (req.method === 'PATCH') {

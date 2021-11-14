@@ -5,7 +5,8 @@ exports.up = async function up(sql) {
  		bookmarkname varchar(40) UNIQUE NOT NULL,
     time varchar(60) NOT NULL,
 		note varchar,
-		video_id integer
+		video_id integer,
+		video_url varchar(120) NOT NULL
 	);`;
 };
 

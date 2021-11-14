@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { GetServerSidePropsContext } from 'next';
 import { useRouter } from 'next/dist/client/router';
 import Link from 'next/link';
@@ -49,16 +50,16 @@ export default function RegisterPage(props) {
   const router = useRouter();
 
   async function deleteVideo(id) {
-    const videosResponse = await fetch(`${props.baseUrl}/api/videos/${id}`, {
+    const videosResponse = await fetch(`/api/videos/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    const deletedUser = await videosResponse.json();
-    const newSate = videoList.filter((video) => video.id !== deletedUser.id);
-    setVideoList(newSate);
+    const deletedVideo = await videosResponse.json();
+    const newState = videoList.filter((video) => video.id !== deletedVideo.id);
+    setVideoList(newState);
   }
   return (
     <Layout>
@@ -69,7 +70,7 @@ export default function RegisterPage(props) {
         onSubmit={async (event) => {
           event.preventDefault();
 
-          const registerResponse = await fetch('/api/videoapi', {
+          const registerResponse = await fetch('/api/videos', {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -92,7 +93,7 @@ export default function RegisterPage(props) {
           const destination =
             typeof router.query.returnTo === 'string' && router.query.returnTo
               ? router.query.returnTo
-              : `/users`;
+              : `/videos/${video.id}`;
 
           // props.refreshUsername();
 
@@ -141,18 +142,34 @@ export default function RegisterPage(props) {
         {videoList.map((video) => {
           // actually props.liked user
           return (
-            <div css={singleImage} key={`user-li-${video.id}`}>
-              <br />
-              <Link href={`/users/${video.id}`}>
-                <a>
-                  <img
-                    style={{ borderRadius: '5px' }}
-                    src={`/${video.name}.gif`}
-                    alt={video.videoname}
-                  />
-                  <p>{video.videoname}</p>
-                </a>
-              </Link>
+            <div key={`user-li-${video.id}`}>
+              <div css={singleImage}>
+                <br />
+                <Link href={`/users/${video.id}`}>
+                  <a>
+                    <img
+                      style={{ borderRadius: '5px' }}
+                      src={`/${video.name}.gif`}
+                      alt={video.videoname}
+                    />
+                    <p>{video.videoname}</p>
+                  </a>
+                </Link>
+              </div>
+              <button
+                onClick={() => {
+                  deleteVideo(video.id);
+                }}
+              >
+                <DeleteForeverIcon
+                  style={{
+                    width: '20px',
+                    height: '30px',
+                    padding: '0px',
+                    margin: '0px',
+                  }}
+                />
+              </button>
             </div>
           );
         })}
