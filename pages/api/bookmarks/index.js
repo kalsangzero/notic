@@ -10,19 +10,6 @@ import {
 } from '../../../util/database';
 
 export default async function registerHandler(req, res) {
-  if (!req.body.bookmarkname) {
-    res.status(400).send({
-      errors: [{ message: 'Please insert Name of the Bookmark' }],
-    });
-    return; // return right away
-  }
-  if (!req.body.note) {
-    res.status(400).send({
-      errors: [{ message: 'Insert the url of the Note' }],
-    });
-    return; // return right away
-  }
-
   try {
     const bookmarks = await getBookmarks();
     if (req.method === 'GET') {
@@ -30,9 +17,11 @@ export default async function registerHandler(req, res) {
     } else if (req.method === 'POST') {
       const body = req.body;
       const createdBookmark = await insertBookmark({
+        bookmarkname: body.bookmarkname,
+        note: body.note,
         time: body.time,
       });
-      console.log('req.bodytime', req.body.time);
+
       if (!createdBookmark) {
         res.status(500).send({ errors: [{ message: 'Bookmark not create' }] });
         return;
@@ -50,10 +39,7 @@ export default async function registerHandler(req, res) {
 
       const updatedBookmark = await updateBookmarkById(Number(query.videoId), {
         bookmarkname: body.bookmarkname,
-        time: body.time,
         note: body.note,
-        videoId: body.videoId,
-        videoUrl: body.videoUrl,
       });
 
       return res.status(200).json(updatedBookmark);

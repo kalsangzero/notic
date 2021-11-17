@@ -311,14 +311,24 @@ export async function updateVideoById(
   return video && camelcaseKeys(video);
 }
 
-export async function insertBookmark({ time }: { time: string }) {
+export async function insertBookmark({
+  bookmarkname,
+  note,
+  time,
+}: {
+  bookmarkname: string;
+  note: string;
+  time: string;
+}) {
   const [bookmark] = await sql<[Bookmark | undefined]>`
     INSERT INTO bookmarks
-      (time)
+      (bookmarkname,  note, time)
     VALUES
-     (${time})
+     (${bookmarkname}, ${note}, ${time})
     RETURNING
-      time
+    bookmarkname,
+    note,
+    time
   `;
   return bookmark && camelcaseKeys(bookmark);
 }
@@ -327,9 +337,11 @@ export async function getBookmarks() {
   const bookmarks = await sql<Bookmark[]>`
       SELECT
          id,
-         bookmarkname
+         bookmarkname,
+         note,
+         time
       FROM
-         bookmarks;
+         bookmarks
          `;
   // console.log('proooo', products);
   return bookmarks.map((bookmark) => {
@@ -341,7 +353,9 @@ export async function getBookmark(id: number) {
   const [bookmark] = await sql<[Bookmark]>`
       SELECT
       id,
-      bookamrkname
+      bookamrkname,
+      note,
+      time
       FROM
       videos
       Where
@@ -372,13 +386,11 @@ export async function updateBookmarkById(
   id: number,
   {
     bookmarkname,
-    time,
     note,
     videoId,
     videoUrl,
   }: {
     bookmarkname: string;
-    time: string;
     note: string;
     videoUrl: string;
     videoId: number;
@@ -389,7 +401,6 @@ export async function updateBookmarkById(
       bookmarks
     SET
       bookmarkname = ${bookmarkname},
-      time = ${time},
       note =${note},
       video_id = ${videoId},
       video_url=${videoUrl}

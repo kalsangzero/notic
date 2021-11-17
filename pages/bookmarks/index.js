@@ -2,6 +2,8 @@ import { css, jsx } from '@emotion/react';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
 import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import Link from 'next/link';
@@ -16,7 +18,7 @@ const videoPage = css`
 const inputBox = css`
   margin-left: 5px;
   width: 600px;
-  height: 600px;
+  height: 100px;
   border-radius: 5px;
   background-color: rgb(255, 255, 255);
   border: 5px double solid rgb(229, 232, 235);
@@ -48,61 +50,116 @@ export default function Home(props) {
   const controlsRef = useRef();
   const canvasRef = useRef();
   const [bookmarks, setBookmarks] = useState([]);
+  const [showForm, SetShowForm] = useState(false);
   const [errors, setErrors] = useState([]);
   const router = useRouter();
-
-  const addBookmark = async () => {
-    const canvas = canvasRef.current;
-    canvas.width = '160px';
-    canvas.height = '90px';
-    const dataUrl = canvas.toDataURL();
-    canvas.width = 0;
-    canvas.height = 0;
-    const bookmarksCopy = [...bookmarkList];
-    bookmarksCopy.push({
-      time: playerRef.current.getCurrentTime(),
-      bookmarkname: bookmarks.boomarkname,
-      note: bookmarks.note,
-    });
-    setBookmarkList(bookmarksCopy);
-    console.log('bookmarkcopy', bookmarksCopy);
-
-    const registerResponse = await fetch('/api/bookmarks', {
+  function formatDuration(value) {
+    const minute = Math.floor(value / 60);
+    const secondLeft = value - minute * 60;
+    return `${minute}:${secondLeft < 9 ? `0${secondLeft}` : secondLeft}`;
+  }
+  const createFullBookmark = async () => {
+    const bookmarkResponse = await fetch('/api/bookmarks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
+        bookmarkname: bookmarkname,
+        note: note,
         time: time,
       }),
     });
-    const bookmark = await registerResponse.json();
+    const bookmark = await bookmarkResponse.json();
     if ('errors' in bookmark) {
       setErrors(bookmark.errors);
       return;
     }
-    // console.log(videoJson.video);
+    const newState = { ...bookmarkList, bookmark };
+    setBookmarkList(newState);
+  };
+
+  const addBookmark = () => {
+    SetShowForm(true);
+    setTime(playerRef.current.getCurrentTime());
+  };
+  const showFormFunction = () => {
+    return (
+      <form
+        onSubmit={(event) => {
+          event.preventDefault();
+        }}
+      >
+        <h1
+          style={{
+            margin: 0,
+            paddingLeft: '10px',
+            fontSize: '32px',
+            width: '120px',
+            height: '48px',
+          }}
+        >
+          <label>
+            <input
+              value={bookmarkname}
+              onChange={(event) => setBookmarkname(event.currentTarget.value)}
+            />
+          </label>
+        </h1>
+        <p style={{ margin: '0px', paddingLeft: '10px' }}>{time}</p>
+
+        <label>
+          <textarea
+            value={note}
+            css={inputBox}
+            rows="60"
+            cols="60"
+            name="content"
+            placeholder="Enter Notes here..."
+            onChange={(event) => setNote(event.currentTarget.value)}
+          />
+        </label>
+        <button onClick={createFullBookmark}>Save</button>
+      </form>
+    );
   };
 
   async function deleteBookmark(id) {
-    const bookmarksResponse = await fetch(`/api/bookmarks`, {
+    const bookmarkResponse = await fetch(`/api/bookmarks`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    const deletedBookmark = await bookmarksResponse.json();
+    const deletedBookmark = await bookmarkResponse.json();
     const newState = bookmarkList.filter(
       (bookmark) => bookmark.id !== deletedBookmark.id,
     );
     setBookmarkList(newState);
   }
 
-  function formatDuration(value) {
-    const minute = Math.floor(value / 60);
-    const secondLeft = value - minute * 60;
-    return `${minute}:${secondLeft < 9 ? `0${secondLeft}` : secondLeft}`;
+  async function updateBookmark(id, bookmarkname, note) {
+    const bookmarkResponse = await fetch(`${props.baseUrl}/api/bookmarks`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ bookmarkname: bookmarkname, note: note }),
+    });
+
+    const updatedBookmark = await bookmarkResponse.json();
+
+    const newSate = [...bookmarkList];
+
+    const outdatedBookmark = newSate.find(
+      (bookmark) => bookmark.id === updatedBookmark.id,
+    );
+
+    outdatedBookmark.bookmarkname = updatedBookmark.bookmarkname;
+    outdatedBookmark.note = updatedBookmark.note;
+
+    setBookmarkList(newSate);
   }
   return (
     <Layout>
@@ -119,71 +176,85 @@ export default function Home(props) {
           formatDuration={formatDuration}
         />
         <div css={formStyles}>
-          <form
-            onSubmit={(event) => {
-              event.preventDefault();
-            }}
-          >
-            <h1
-              style={{
-                margin: 0,
-                paddingLeft: '10px',
-                fontSize: '32px',
-                width: '120px',
-                height: '48px',
-              }}
-            >
-              <label>
-                <input
-                  value={bookmarkname}
-                  onChange={(event) =>
-                    setBookmarkname(event.currentTarget.value)
-                  }
-                />
-              </label>
-            </h1>
-            <p style={{ margin: '0px', paddingLeft: '10px' }}>{time}</p>
+          <h2>Note List</h2>
+          {showForm ? showFormFunction() : null}
+          {console.log('bmlist', bookmarkList)}
+          {bookmarkList.map((bookmark) => (
+            <div key={`bookmark-li-${bookmark.id}`}>
+              <form
+                onSubmit={(event) => {
+                  event.preventDefault();
+                }}
+              >
+                <h1
+                  style={{
+                    margin: 0,
+                    paddingLeft: '10px',
+                    fontSize: '32px',
+                    width: '120px',
+                    height: '48px',
+                  }}
+                >
+                  <label>
+                    <input
+                      value={bookmark.bookmarkname}
+                      onChange={(event) => event.currentTarget.value}
+                    />
+                  </label>
+                </h1>
+                <p style={{ margin: '0px', paddingLeft: '10px' }}>
+                  {bookmark.time}
+                  <span style={{ marginLeft: '100px' }}>
+                    <button
+                      onClick={() => {
+                        deleteBookmark(bookmark.id);
+                      }}
+                    >
+                      <DeleteForeverIcon
+                        style={{
+                          width: '20px',
+                          height: '30px',
+                          padding: '0px',
+                          margin: '0px',
+                        }}
+                      />
+                    </button>
+                    <button
+                      onClick={() => {
+                        deleteBookmark(bookmark.id);
+                      }}
+                    >
+                      <EditIcon
+                        style={{
+                          width: '20px',
+                          height: '30px',
+                          padding: '0px',
+                          margin: '0px',
+                        }}
+                      />
+                    </button>
+                  </span>
+                  {console.log('bookmarkdbstime', bookmark.time)}
+                </p>
 
-            <label>
-              <textarea
-                value={note}
-                css={inputBox}
-                rows="60"
-                cols="60"
-                name="content"
-                placeholder="Enter Notes here..."
-                onChange={(event) => setNote(event.currentTarget.value)}
-              />
-            </label>
-            <button>Save</button>
-          </form>
+                <label>
+                  <textarea
+                    value={bookmark.note}
+                    css={inputBox}
+                    rows="60"
+                    cols="60"
+                    name="content"
+                    placeholder="Enter Notes here..."
+                    onChange={(event) => event.currentTarget.value}
+                  />
+                </label>
+
+                <button>Save</button>
+              </form>
+            </div>
+          ))}
         </div>
       </div>
-      <Grid container style={{ marginTop: 20 }} spacing={3}>
-        {bookmarkList.map((bookmark) => (
-          <Grid key={`bookmark-li-${bookmark.id}`}>
-            <Paper
-              onClick={() => {
-                playerRef.current.seekTo(bookmark.time);
-                // controlsRef.current.visibility = 'visible';
-                // setTimeout(() => {
-                //   controlsRef.current.visibility = 'hidden';
-                // }, 1000);
-                setBookmarkname(bookmark.bookmarkname);
-                setTime(bookmark.time);
-                setNote(bookmark.note);
-              }}
-              elevation={3}
-            >
-              <img crossOrigin="anonymous" src={bookmark.image} alt="d" />
-              <Typography variant="body2" align="center">
-                bookmark at {formatDuration(Math.round(bookmark.time))}
-              </Typography>
-            </Paper>
-          </Grid>
-        ))}
-      </Grid>
-      <canvas ref={canvasRef} />
     </Layout>
   );
 }
