@@ -7,10 +7,10 @@ import {
   getBookmarks,
   insertBookmark,
   updateBookmarkById,
-} from '../../../util/database';
+} from '../../../../util/database';
 
 export default async function registerHandler(req, res) {
-  if (!req.body.bookamrkname) {
+  if (!req.body.bookmarkname) {
     res.status(400).send({
       errors: [{ message: 'Please insert Name of the Bookmark' }],
     });
@@ -23,30 +23,21 @@ export default async function registerHandler(req, res) {
     return; // return right away
   }
 
-  if (!req.body.videoId) {
-    res.status(400).send({
-      errors: [{ message: 'Please insert VideoId' }],
-    });
-    return;
-  }
-
   try {
+    const bookmarks = await getBookmarks();
     if (req.method === 'GET') {
-      const bookmarks = await getBookmarks();
       return res.status(200).json(bookmarks);
     } else if (req.method === 'POST') {
       const body = req.body;
-
-      // the code for the POST request
       const createdBookmark = await insertBookmark({
-        bookmarkname: body.bookmarkname,
-        time: body.time,
-        note: body.note,
-        videoId: body.videoId,
-        videoUrl: body.videoUrl,
+        bookmarkname: body.bookmarkname || null,
+        time: body.time ? body.time : null,
+        note: body.note || null,
+        videoId: body.videoId ? body.videoId : null,
+        videoUrl: body.videoUrl ? body.videoUrl : null,
       });
       if (!createdBookmark) {
-        res.status(500).send({ errors: [{ message: 'Bookamrk not create' }] });
+        res.status(500).send({ errors: [{ message: 'Bookmark not create' }] });
         return;
       }
       return res.status(200).json(createdBookmark);

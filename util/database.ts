@@ -311,11 +311,7 @@ export async function updateVideoById(
 }
 
 export async function insertBookmark({
-  bookmarkname,
   time,
-  note,
-  videoId,
-  videoUrl,
 }: {
   bookmarkname: string;
   time: string;
@@ -327,12 +323,11 @@ export async function insertBookmark({
     INSERT INTO bookmarks
       (bookmarkname, note, time, video_id, video_url)
     VALUES
-      (${bookmarkname}, ${note},${time}, ${videoId}, ${videoUrl})
+      (null, null,${time},null, null)
     RETURNING
-      id,
-      bookmarkname,
-      note,
+    bookmarkname,
       time,
+      note,
       video_id,
       video_url
   `;

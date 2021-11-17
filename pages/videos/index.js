@@ -145,7 +145,7 @@ export default function RegisterPage(props) {
             <div key={`user-li-${video.id}`}>
               <div css={singleImage}>
                 <br />
-                <Link href={`/users/${video.id}`}>
+                <Link href={`/videos/1/bookmarks`}>
                   <a>
                     <img
                       style={{ borderRadius: '5px' }}

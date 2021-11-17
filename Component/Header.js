@@ -2,18 +2,16 @@ import { css } from '@emotion/react';
 import Link from 'next/link';
 
 const navStyle = css`
-  background-color: #333;
   padding: 30px 54px;
   a {
     color: #f2f2f2;
     text-align: center;
     padding: 30px 56px;
     text-decoration: none;
-    font-size: 24px;
+    font-size: 20px;
   }
   a:hover {
-    background-color: #111;
-    color: orange;
+    color: #ff1966;
   }
 `;
 
@@ -23,16 +21,13 @@ export default function Header(props) {
       <Link href="/">
         <a>Home</a>
       </Link>
-      <Link href="/about">
-        <a>About</a>
-      </Link>
       <Link href="/contact">
         <a>Contact</a>
       </Link>
       <Link href="/videos">
         <a>Videos</a>
       </Link>
-      <div style={{ float: 'right' }}>
+      <div style={{ float: 'right', paddingRight: '56px' }}>
         <Link href="/register">
           <a>Register</a>
         </Link>

@@ -10,18 +10,15 @@ const allButFooter = css`
 const footerStyle = css`
   margin-top: 20px;
   padding: 20px;
+  background-color: #030454;
   a {
     text-decoration: none;
-    color: black;
+    color: white;
     margin: 0 36px;
     padding: 20px;
     text-align: center;
     justify-content: space-between;
     width: 100%;
-    flex-direction: column;
-  }
-  a:hover {
-    background-color: grey;
   }
 `;
 

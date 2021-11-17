@@ -6,8 +6,8 @@ import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import Layout from '../../Component/Layout';
-import ResponsivePlayer from '../../Component/ResponsivePlayer';
+import Layout from '../../../../Component/Layout';
+import ResponsivePlayer from '../../../../Component/ResponsivePlayer';
 
 const videoPage = css`
   display: flex;
@@ -40,8 +40,8 @@ const formStyles = css`
 `;
 export default function Home(props) {
   const [bookmarkList, setBookmarkList] = useState(props.bookmarks);
+  const [bookmarkname, setBookmarkname] = useState('');
   const [note, setNote] = useState('');
-  const [bookmarkname, setBookmarkname] = useState('Note');
   const [time, setTime] = useState('TimeMark');
   const [videoUrl, setVideoUrl] = useState('https://youtu.be/-iun6KPT4SM');
   const playerRef = useRef();
@@ -51,21 +51,41 @@ export default function Home(props) {
   const [errors, setErrors] = useState([]);
   const router = useRouter();
 
-  const addBookmark = () => {
+  const addBookmark = async () => {
     const canvas = canvasRef.current;
     canvas.width = '160px';
     canvas.height = '90px';
-    const dataUri = canvas.toDataURL();
+    const dataUrl = canvas.toDataURL();
     canvas.width = 0;
     canvas.height = 0;
-    const bookmarksCopy = [...bookmarks];
+    const bookmarksCopy = [...bookmarkList];
     bookmarksCopy.push({
       time: playerRef.current.getCurrentTime(),
-      bookmarkname: bookmarks.bookmarkname,
+      bookmarkname: bookmarks.boomarkname,
       note: bookmarks.note,
     });
-    setBookmarks(bookmarksCopy);
+    setBookmarkList(bookmarksCopy);
+    console.log('bookmarkcopy', bookmarksCopy);
+
+    const registerResponse = await fetch('/api/videos/[videoId]/bookmarks', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        time: playerRef.current.getCurrentTime(),
+      }),
+    });
+    const bookmark = await registerResponse.json();
+    if ('errors' in bookmark) {
+      setErrors(bookmark.errors);
+      return;
+    }
+    // console.log(videoJson.video);
+    const newState = { ...bookmarkList, bookmark };
+    setBookmarkList(newState);
   };
+
   async function deleteBookmark(id) {
     const bookmarksResponse = await fetch(`/api/bookmarks/${id}`, {
       method: 'DELETE',
@@ -80,6 +100,7 @@ export default function Home(props) {
     );
     setBookmarkList(newState);
   }
+
   function formatDuration(value) {
     const minute = Math.floor(value / 60);
     const secondLeft = value - minute * 60;
@@ -100,44 +121,31 @@ export default function Home(props) {
           formatDuration={formatDuration}
         />
         <div css={formStyles}>
-          <h1 style={{ margin: 0, paddingLeft: '10px' }}>{bookmarkname}</h1>
-          <p style={{ margin: '0px', paddingLeft: '10px' }}>{time}</p>
           <form
-            onSubmit={async (event) => {
+            onSubmit={(event) => {
               event.preventDefault();
-
-              const registerResponse = await fetch('/api/bookmarks', {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  bookmarkname: bookmarkname,
-                  videoUrl: videoUrl,
-                  note: note,
-                }),
-              });
-
-              const bookmark = await registerResponse.json();
-
-              if ('errors' in bookmark) {
-                setErrors(bookmark.errors);
-                return;
-              }
-              // console.log(videoJson.video);
-
-              const destination =
-                typeof router.query.returnTo === 'string' &&
-                router.query.returnTo
-                  ? router.query.returnTo
-                  : `/bookmarks/${bookmark.id}`;
-
-              // props.refreshUsername();
-              router.push(destination);
-              const newState = { ...bookmarkList, bookmark };
-              setBookmarkList(newState);
             }}
           >
+            <h1
+              style={{
+                margin: 0,
+                paddingLeft: '10px',
+                fontSize: '32px',
+                width: '120px',
+                height: '48px',
+              }}
+            >
+              <label>
+                <input
+                  value={bookmarkname}
+                  onChange={(event) =>
+                    setBookmarkname(event.currentTarget.value)
+                  }
+                />
+              </label>
+            </h1>
+            <p style={{ margin: '0px', paddingLeft: '10px' }}>{time}</p>
+
             <label>
               <textarea
                 value={note}
@@ -150,14 +158,11 @@ export default function Home(props) {
               />
             </label>
             <button>Save</button>
-            <Link href="/users">
-              <a>Marketplace</a>
-            </Link>
           </form>
         </div>
       </div>
       <Grid container style={{ marginTop: 20 }} spacing={3}>
-        {bookmarkList.map((bookmark, index) => (
+        {bookmarkList.map((bookmark) => (
           <Grid key={`bookmark-li-${bookmark.id}`}>
             <Paper
               onClick={() => {
@@ -166,6 +171,9 @@ export default function Home(props) {
                 // setTimeout(() => {
                 //   controlsRef.current.visibility = 'hidden';
                 // }, 1000);
+                setBookmarkname(bookmark.bookmarkname);
+                setTime(bookmark.time);
+                setNote(bookmark.note);
               }}
               elevation={3}
             >
@@ -176,22 +184,20 @@ export default function Home(props) {
             </Paper>
           </Grid>
         ))}
-        {console.log('bookmark', bookmarks)}
       </Grid>
       <canvas ref={canvasRef} />
     </Layout>
   );
 }
-export async function getServerSideProps(context) {
-  const { getBookmarks } = await import('../../util/database');
+export async function getServerSideProps() {
+  const { getBookmarks } = await import('../../../../util/database');
   // const { getVideo } = await import('../../util/database');
 
   // const video = await getVideo(context.query.videoId);
 
-  console.log(getBookmarks);
   const bookmarks = await getBookmarks();
 
-  //  { id: '6', name: 'Andrea', favoriteColor: 'purple' },
+  //  { id: '6', bookmarkname: 'Andrea', favoriteColor: 'purple' },
 
   return {
     props: {

@@ -16,10 +16,10 @@ const errorsStyles = css`
   color: red;
 `;
 
-type Props = {
-  refreshUsername: () => void;
-  // csrfToken: string
-};
+// type Props = {
+//   refreshUsername: () => void;
+//   // csrfToken: string
+// };
 
 export default function RegisterPage(props: Props) {
   const [username, setUsername] = useState('');
@@ -64,9 +64,9 @@ export default function RegisterPage(props: Props) {
           const destination =
             typeof router.query.returnTo === 'string' && router.query.returnTo
               ? router.query.returnTo
-              : `/login`;
+              : `/users/${registerJson.user.id}`;
 
-          props.refreshUsername();
+          // props.refreshUsername();
 
           router.push(destination);
         }}
@@ -113,45 +113,44 @@ export default function RegisterPage(props: Props) {
   );
 }
 
-// export async function getServerSideProps(context: GetServerSidePropsContext) {
-//   const { getValidSessionByToken } = await import('../util/database');
-//   const { createToken } = await import('../util/csrf');
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { getValidSessionByToken } = await import('../util/database');
 
-//   // Redirect from HTTP to HTTPS on Heroku
-//   if (
-//     context.req.headers.host &&
-//     context.req.headers['x-forwarded-proto'] &&
-//     context.req.headers['x-forwarded-proto'] !== 'https'
-//   ) {
-//     return {
-//       redirect: {
-//         destination: `https://${context.req.headers.host}/register`,
-//         permanent: true,
-//       },
-//     };
-//   }
+  // Redirect from HTTP to HTTPS on Heroku
+  if (
+    context.req.headers.host &&
+    context.req.headers['x-forwarded-proto'] &&
+    context.req.headers['x-forwarded-proto'] !== 'https'
+  ) {
+    return {
+      redirect: {
+        destination: `https://${context.req.headers.host}/register`,
+        permanent: true,
+      },
+    };
+  }
 
-//   const sessionToken = context.req.cookies.sessionToken;
+  const sessionToken = context.req.cookies.sessionToken;
 
-//   const session = await getValidSessionByToken(sessionToken);
+  const session = await getValidSessionByToken(sessionToken);
 
-//   console.log(session);
+  console.log(session);
 
-//   if (session) {
-//     // Redirect the user when they have a session
-//     // token by returning an object with the `redirect` prop
-//     // https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
-//     return {
-//       redirect: {
-//         destination: '/',
-//         permanent: false,
-//       },
-//     };
-//   }
+  if (session) {
+    // Redirect the user when they have a session
+    // token by returning an object with the `redirect` prop
+    // https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering
+    return {
+      redirect: {
+        destination: '/',
+        permanent: false,
+      },
+    };
+  }
 
-//   return {
-//     props: {
-//       csrfToken: createToken(),
-//     },
-//   };
-// }
+  return {
+    props: {
+      // csrfToken: createToken(),
+    },
+  };
+}

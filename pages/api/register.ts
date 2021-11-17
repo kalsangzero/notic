@@ -1,9 +1,12 @@
 import crypto from 'node:crypto';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { hashPassword } from '../../util/auth';
+import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
 // import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
 // import { verifyCsrfToken } from '../../util/csrf';
 import {
+  createSession,
+  deleteExpiredSessions,
   getUserWithPasswordHashByUsername,
   insertUser,
   User,
@@ -69,27 +72,25 @@ export default async function registerHandler(
       lastName: lastName,
     });
 
-    //   // clean old sessions
-    //   deleteExpiredSessions();
-
     if (!user) {
       res.status(500).send({ errors: [{ message: 'User not create' }] });
       return;
     }
+    // clean old sessions
+    deleteExpiredSessions();
+    // Create the record in the sessions table with a new token
 
-    //   // Create the record in the sessions table with a new token
+    // 1. create the token
+    const token = crypto.randomBytes(64).toString('base64');
 
-    //   // 1. create the token
-    //   const token = crypto.randomBytes(64).toString('base64');
+    // 2. do a DB query to add the session record
+    const newSession = await createSession(token, user.id);
 
-    //   // 2. do a DB query to add the session record
-    //   const newSession = await createSession(token, user.id);
+    // set the response to create the cookie in the browser
 
-    //   // set the response to create the cookie in the browser
+    const cookie = createSerializedRegisterSessionTokenCookie(newSession.token);
 
-    //   const cookie = createSerializedRegisterSessionTokenCookie(newSession.token);
-
-    res.status(200).send({ user: user });
+    res.status(200).setHeader('Set-Cookie', cookie).send({ user: user });
   } catch (err) {
     res.status(500).send({ errors: [{ message: (err as Error).message }] });
   }
