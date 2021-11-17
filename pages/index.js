@@ -85,13 +85,13 @@ export default function Home() {
           sites require multiple taps to save or retrieve the videos when you
           are ready to watch them. With notic you can bookmark videos with a
           single tap using our browser extensions for Chrome. The currently
-          supported sites where you can Notic videos easily are Facebook,
-          YouTube, Vimeo, Dailymotion and Reddit. Lookout for the Notic Button
-          or Icon next to the video title. All recently bookmarked videos will
-          show up in your device in a seperatesection. You can revisit videos
-          timestamp again and also edit the notes. You will never miss
-          aparticular topic taught bookmarked Video with notic. Notic is easy
-          Video Bookmarking. Enjoy notic!
+          supported sites where you can Notic videos easily are publicly
+          viewable videos on Facebook, YouTube, Vimeo, Dailymotion and Reddit.
+          Lookout for the Notic Button to the video title. All recently
+          bookmarked videos will show up in your device in a seperatesection.
+          You can revisit videos timestamp again and also edit the notes. You
+          will never miss aparticular topic taught bookmarked Video with notic.
+          Notic is easy Video Bookmarking. Enjoy notic!
         </p>
         <Link href="/users">
           <a css={buttontype}>VideosMarker</a>

@@ -6,8 +6,8 @@ import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import Layout from '../../../../Component/Layout';
-import ResponsivePlayer from '../../../../Component/ResponsivePlayer';
+import Layout from '../../Component/Layout';
+import ResponsivePlayer from '../../Component/ResponsivePlayer';
 
 const videoPage = css`
   display: flex;
@@ -67,13 +67,13 @@ export default function Home(props) {
     setBookmarkList(bookmarksCopy);
     console.log('bookmarkcopy', bookmarksCopy);
 
-    const registerResponse = await fetch('/api/videos/[videoId]/bookmarks', {
+    const registerResponse = await fetch('/api/bookmarks', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        time: playerRef.current.getCurrentTime(),
+        time: time,
       }),
     });
     const bookmark = await registerResponse.json();
@@ -82,12 +82,10 @@ export default function Home(props) {
       return;
     }
     // console.log(videoJson.video);
-    const newState = { ...bookmarkList, bookmark };
-    setBookmarkList(newState);
   };
 
   async function deleteBookmark(id) {
-    const bookmarksResponse = await fetch(`/api/bookmarks/${id}`, {
+    const bookmarksResponse = await fetch(`/api/bookmarks`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -190,14 +188,12 @@ export default function Home(props) {
   );
 }
 export async function getServerSideProps() {
-  const { getBookmarks } = await import('../../../../util/database');
+  const { getBookmarks } = await import('../../util/database');
   // const { getVideo } = await import('../../util/database');
 
   // const video = await getVideo(context.query.videoId);
 
   const bookmarks = await getBookmarks();
-
-  //  { id: '6', bookmarkname: 'Andrea', favoriteColor: 'purple' },
 
   return {
     props: {

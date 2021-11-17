@@ -50,7 +50,7 @@ export default function RegisterPage(props) {
   const router = useRouter();
 
   async function deleteVideo(id) {
-    const videosResponse = await fetch(`/api/videos/${id}`, {
+    const videosResponse = await fetch(`/api/bookmark`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ export default function RegisterPage(props) {
             <div key={`user-li-${video.id}`}>
               <div css={singleImage}>
                 <br />
-                <Link href={`/videos/1/bookmarks`}>
+                <Link href={`/bookmarks`}>
                   <a>
                     <img
                       style={{ borderRadius: '5px' }}

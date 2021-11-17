@@ -7,7 +7,7 @@ import {
   getBookmarks,
   insertBookmark,
   updateBookmarkById,
-} from '../../../../util/database';
+} from '../../../util/database';
 
 export default async function registerHandler(req, res) {
   if (!req.body.bookmarkname) {
@@ -30,12 +30,9 @@ export default async function registerHandler(req, res) {
     } else if (req.method === 'POST') {
       const body = req.body;
       const createdBookmark = await insertBookmark({
-        bookmarkname: body.bookmarkname || null,
-        time: body.time ? body.time : null,
-        note: body.note || null,
-        videoId: body.videoId ? body.videoId : null,
-        videoUrl: body.videoUrl ? body.videoUrl : null,
+        time: body.time,
       });
+      console.log('req.bodytime', req.body.time);
       if (!createdBookmark) {
         res.status(500).send({ errors: [{ message: 'Bookmark not create' }] });
         return;
@@ -44,9 +41,7 @@ export default async function registerHandler(req, res) {
     } else if (req.method === 'DELETE') {
       console.log('query', req.query);
       // the code for the POST request
-      const deletedBookmark = await deleteBookmarkById(
-        Number(req.query.bookmarkId),
-      );
+      const deletedBookmark = await deleteBookmarkById(Number(req.query.id));
 
       return res.status(200).json(deletedBookmark);
     } else if (req.method === 'PATCH') {

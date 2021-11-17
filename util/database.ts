@@ -24,6 +24,7 @@ export type Video = {
 export type Bookmark = {
   id: number;
   bookmarkname: string;
+  time: string;
   note: string;
   videoId: number;
   videoUrl: string;
@@ -310,26 +311,14 @@ export async function updateVideoById(
   return video && camelcaseKeys(video);
 }
 
-export async function insertBookmark({
-  time,
-}: {
-  bookmarkname: string;
-  time: string;
-  note: string;
-  videoId: number;
-  videoUrl: string;
-}) {
+export async function insertBookmark({ time }: { time: string }) {
   const [bookmark] = await sql<[Bookmark | undefined]>`
     INSERT INTO bookmarks
-      (bookmarkname, note, time, video_id, video_url)
+      (time)
     VALUES
-      (null, null,${time},null, null)
+     (${time})
     RETURNING
-    bookmarkname,
-      time,
-      note,
-      video_id,
-      video_url
+      time
   `;
   return bookmark && camelcaseKeys(bookmark);
 }
