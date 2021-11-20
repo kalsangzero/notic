@@ -21,7 +21,7 @@ export type Video = {
   profileId: number;
 };
 
-export type Bookmark = {
+export type Bookmarks = {
   id: number;
   bookmarkname: string;
   time: string;
@@ -320,7 +320,7 @@ export async function insertBookmark({
   note: string;
   time: string;
 }) {
-  const [bookmark] = await sql<[Bookmark | undefined]>`
+  const [bookmark] = await sql<[Bookmarks | undefined]>`
     INSERT INTO bookmarks
       (bookmarkname,  note, time)
     VALUES
@@ -334,7 +334,7 @@ export async function insertBookmark({
 }
 
 export async function getBookmarks() {
-  const bookmarks = await sql<Bookmark[]>`
+  const bookmarks = await sql<Bookmarks[]>`
       SELECT
          id,
          bookmarkname,
@@ -367,7 +367,7 @@ export async function getBookmark(id: number) {
 export async function deleteBookmarkById(id: number) {
   const [bookmark] = await sql<[Bookmark | undefined]>`
     DELETE FROM
-      videos
+      bookmarks
     WHERE
       id = ${id}
     RETURNING
@@ -387,13 +387,9 @@ export async function updateBookmarkById(
   {
     bookmarkname,
     note,
-    videoId,
-    videoUrl,
   }: {
     bookmarkname: string;
     note: string;
-    videoUrl: string;
-    videoId: number;
   },
 ) {
   const [bookmark] = await sql<[Bookmark | undefined]>`
@@ -401,19 +397,13 @@ export async function updateBookmarkById(
       bookmarks
     SET
       bookmarkname = ${bookmarkname},
-      note =${note},
-      video_id = ${videoId},
-      video_url=${videoUrl}
+      note =${note}
     WHERE
       id = ${id}
     RETURNING
       id,
       bookmarkname,
-      time,
-      note,
-      video_id,
-      video_url
-
+      note
   `;
   return bookmark && camelcaseKeys(bookmark);
 }

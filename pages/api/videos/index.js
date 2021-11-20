@@ -64,7 +64,7 @@ export default async function registerHandler(req, res) {
       const body = req.body;
       const query = req.query;
 
-      const updatedVideo = await updateVideoById(Number(query.userId), {
+      const updatedVideo = await updateVideoById(Number(query.videoId), {
         videoname: body.videoame,
         url: body.url,
         profileId: body.profileId,

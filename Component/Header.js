@@ -31,7 +31,7 @@ export default function Header(props) {
         <Link href="/register">
           <a>Register</a>
         </Link>
-        <Link href="/profile">
+        <Link href="/users/${user.id}">
           <a>Profile</a>
         </Link>
         <Link href="/login">

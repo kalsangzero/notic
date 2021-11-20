@@ -49,8 +49,21 @@ export default function RegisterPage(props) {
   const [errors, setErrors] = useState([]);
   const router = useRouter();
 
+  async function createVideo() {
+    const videoResponse = await fetch(`/api/videos`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ videoname, url, profileId }),
+    });
+
+    const video = await videoResponse.json();
+    const newSate = [...videoList, video];
+    setVideoList(newSate);
+  }
   async function deleteVideo(id) {
-    const videosResponse = await fetch(`/api/bookmark`, {
+    const videosResponse = await fetch(`/api/videos/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -69,37 +82,6 @@ export default function RegisterPage(props) {
         css={formStyles}
         onSubmit={async (event) => {
           event.preventDefault();
-
-          const registerResponse = await fetch('/api/videos', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              videoname: videoname,
-              url: url,
-              profileId: profileId,
-            }),
-          });
-
-          const video = await registerResponse.json();
-
-          if ('errors' in video) {
-            setErrors(video.errors);
-            return;
-          }
-          // console.log(videoJson.video);
-
-          const destination =
-            typeof router.query.returnTo === 'string' && router.query.returnTo
-              ? router.query.returnTo
-              : `/videos/${video.id}`;
-
-          // props.refreshUsername();
-
-          router.push(destination);
-          const newState = { ...videoList, video };
-          setVideoList(newState);
         }}
       >
         <label>
@@ -126,7 +108,7 @@ export default function RegisterPage(props) {
             onChange={(event) => setProfileId(event.currentTarget.value)}
           />
         </label>
-        <button>Register</button>
+        <button onClick={() => createVideo()}>Register</button>
       </form>
 
       <div css={errorsStyles}>

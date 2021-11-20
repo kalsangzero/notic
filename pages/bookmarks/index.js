@@ -15,13 +15,21 @@ const videoPage = css`
   display: flex;
   position: relative;
 `;
+
+const buttonStyle = css`
+  margin: 0px;
+  padding-left: 10px;
+  cursor: pointer;
+`;
+
 const inputBox = css`
-  margin-left: 5px;
+  margin: 5px 0 5px 10px;
   width: 600px;
   height: 100px;
   border-radius: 5px;
   background-color: rgb(255, 255, 255);
-  border: 5px double solid rgb(229, 232, 235);
+  box-sizing: content-box;
+  border: solid black;
   flex-wrap: wrap;
   display: flex;
   padding: 10px;
@@ -34,11 +42,6 @@ const formStyles = css`
   label {
     display: block;
   }
-  button {
-    margin: 10px;
-    padding: 5px 10px;
-    background-color: none;
-  }
 `;
 export default function Home(props) {
   const [bookmarkList, setBookmarkList] = useState(props.bookmarks);
@@ -50,14 +53,11 @@ export default function Home(props) {
   const controlsRef = useRef();
   const canvasRef = useRef();
   const [bookmarks, setBookmarks] = useState([]);
-  const [showForm, SetShowForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState([]);
   const router = useRouter();
-  function formatDuration(value) {
-    const minute = Math.floor(value / 60);
-    const secondLeft = value - minute * 60;
-    return `${minute}:${secondLeft < 9 ? `0${secondLeft}` : secondLeft}`;
-  }
+
   const createFullBookmark = async () => {
     const bookmarkResponse = await fetch('/api/bookmarks', {
       method: 'POST',
@@ -80,13 +80,13 @@ export default function Home(props) {
   };
 
   const addBookmark = () => {
-    SetShowForm(true);
+    setShowForm(true);
     setTime(playerRef.current.getCurrentTime());
   };
   const showFormFunction = () => {
     return (
       <form
-        onSubmit={(event) => {
+        onSubmit={async (event) => {
           event.preventDefault();
         }}
       >
@@ -125,7 +125,7 @@ export default function Home(props) {
   };
 
   async function deleteBookmark(id) {
-    const bookmarkResponse = await fetch(`/api/bookmarks`, {
+    const bookmarkResponse = await fetch(`/api/bookmarks/${id}`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
@@ -139,28 +139,29 @@ export default function Home(props) {
     setBookmarkList(newState);
   }
 
-  async function updateBookmark(id, bookmarkname, note) {
-    const bookmarkResponse = await fetch(`${props.baseUrl}/api/bookmarks`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ bookmarkname: bookmarkname, note: note }),
-    });
+  // Stretch goals Update
+  // async function updateBookmark(id, newName, newNote) {
+  //   const bookmarkResponse = await fetch(`/api/bookmarks/${id}`, {
+  //     method: 'PATCH',
+  //     headers: {
+  //       'Content-Type': 'application/json',
+  //     },
+  //     body: JSON.stringify({ bookmarkname: newName, note: newNote }),
+  //   });
 
-    const updatedBookmark = await bookmarkResponse.json();
+  //   const updatedBookmark = await bookmarkResponse.json();
 
-    const newSate = [...bookmarkList];
+  //   const newState = [...bookmarkList];
 
-    const outdatedBookmark = newSate.find(
-      (bookmark) => bookmark.id === updatedBookmark.id,
-    );
+  //   const outdatedBookmark = newState.find(
+  //     (bookmark) => bookmark.id === updatedBookmark.id,
+  //   );
 
-    outdatedBookmark.bookmarkname = updatedBookmark.bookmarkname;
-    outdatedBookmark.note = updatedBookmark.note;
+  //   outdatedBookmark.bookmarkname = updatedBookmark.bookmarkname;
+  //   outdatedBookmark.note = updatedBookmark.note;
 
-    setBookmarkList(newSate);
-  }
+  //   setBookmarkList(newState);
+  // }
   return (
     <Layout>
       <Head>
@@ -173,86 +174,38 @@ export default function Home(props) {
           url={videoUrl}
           playerRef={playerRef}
           addBookmark={addBookmark}
-          formatDuration={formatDuration}
         />
         <div css={formStyles}>
           <h2>Note List</h2>
-          {showForm ? showFormFunction() : null}
-          {console.log('bmlist', bookmarkList)}
-          {bookmarkList.map((bookmark) => (
-            <div key={`bookmark-li-${bookmark.id}`}>
-              <form
-                onSubmit={(event) => {
-                  event.preventDefault();
-                }}
-              >
-                <h1
-                  style={{
-                    margin: 0,
-                    paddingLeft: '10px',
-                    fontSize: '32px',
-                    width: '120px',
-                    height: '48px',
-                  }}
-                >
-                  <label>
-                    <input
-                      value={bookmark.bookmarkname}
-                      onChange={(event) => event.currentTarget.value}
-                    />
-                  </label>
-                </h1>
+          {bookmarkList.map((bookmark) => {
+            return (
+              <div key={`bookmark-li-${bookmark.id}`}>
                 <p style={{ margin: '0px', paddingLeft: '10px' }}>
-                  {bookmark.time}
-                  <span style={{ marginLeft: '100px' }}>
-                    <button
-                      onClick={() => {
-                        deleteBookmark(bookmark.id);
-                      }}
-                    >
-                      <DeleteForeverIcon
-                        style={{
-                          width: '20px',
-                          height: '30px',
-                          padding: '0px',
-                          margin: '0px',
-                        }}
-                      />
-                    </button>
-                    <button
-                      onClick={() => {
-                        deleteBookmark(bookmark.id);
-                      }}
-                    >
-                      <EditIcon
-                        style={{
-                          width: '20px',
-                          height: '30px',
-                          padding: '0px',
-                          margin: '0px',
-                        }}
-                      />
-                    </button>
-                  </span>
-                  {console.log('bookmarkdbstime', bookmark.time)}
+                  <button
+                    css={buttonStyle}
+                    onClick={() => {
+                      playerRef.current.seekTo(bookmark.time);
+                    }}
+                  >
+                    <span style={{ marginRight: '20px', fontSize: '16px' }}>
+                      {bookmark.bookmarkname}
+                    </span>
+                    {bookmark.time}
+                  </button>
+
+                  <button
+                    style={{ float: 'right', marginRight: '90px' }}
+                    onClick={() => {
+                      deleteBookmark(bookmark.id);
+                    }}
+                  >
+                    remove
+                  </button>
                 </p>
-
-                <label>
-                  <textarea
-                    value={bookmark.note}
-                    css={inputBox}
-                    rows="60"
-                    cols="60"
-                    name="content"
-                    placeholder="Enter Notes here..."
-                    onChange={(event) => event.currentTarget.value}
-                  />
-                </label>
-
-                <button>Save</button>
-              </form>
-            </div>
-          ))}
+                <p css={inputBox}>{bookmark.note}</p>
+              </div>
+            );
+          })}
         </div>
       </div>
     </Layout>

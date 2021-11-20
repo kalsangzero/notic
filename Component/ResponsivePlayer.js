@@ -83,6 +83,11 @@ export default function ResponsivePlayer(props) {
     ? props.playerRef.current.getDuration()
     : Number('00:00');
 
+  function formatDuration(value) {
+    const minute = Math.floor(value / 60);
+    const secondLeft = value - minute * 60;
+    return `${minute}:${secondLeft < 9 ? `0${secondLeft}` : secondLeft}`;
+  }
   return (
     <div css={playerWrapper}>
       <ReactPlayer
@@ -188,8 +193,8 @@ export default function ResponsivePlayer(props) {
               />
             </span>
             <p>
-              {props.formatDuration(Math.round(currentTime))}/
-              {props.formatDuration(Math.round(duration))}
+              {formatDuration(Math.round(currentTime))}/
+              {formatDuration(Math.round(duration))}
             </p>
           </div>
         </div>

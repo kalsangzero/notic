@@ -6,6 +6,19 @@ import Layout from '../Component/Layout';
 import { Errors } from '../util/types';
 import { RegisterResponse } from './api/register';
 
+const frontPage = css`
+  justify-content: center;
+  text-align: center;
+  background-image: url('/registration.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: white;
+`;
+
+const registercss = css`
+  margin: 300px 0;
+`;
 const formStyles = css`
   label {
     display: block;
@@ -30,86 +43,91 @@ export default function RegisterPage(props: Props) {
   const router = useRouter();
 
   return (
-    <Layout>
-      <h1>Register</h1>
+    <div css={frontPage}>
+      <Layout>
+        <div css={registercss}>
+          <h1>Register</h1>
 
-      <form
-        css={formStyles}
-        onSubmit={async (event) => {
-          event.preventDefault();
+          <form
+            css={formStyles}
+            onSubmit={async (event) => {
+              event.preventDefault();
 
-          const registerResponse = await fetch('/api/register', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              username: username,
-              password: password,
-              firstName: firstName,
-              lastName: lastName,
-              // csrfToken: props.csrfToken,
-            }),
-          });
+              const registerResponse = await fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                  username: username,
+                  password: password,
+                  firstName: firstName,
+                  lastName: lastName,
+                  // csrfToken: props.csrfToken,
+                }),
+              });
 
-          const registerJson =
-            (await registerResponse.json()) as RegisterResponse;
+              const registerJson =
+                (await registerResponse.json()) as RegisterResponse;
 
-          if ('errors' in registerJson) {
-            setErrors(registerJson.errors);
-            return;
-          }
-          console.log(registerJson.user);
+              if ('errors' in registerJson) {
+                setErrors(registerJson.errors);
+                return;
+              }
+              console.log(registerJson.user);
 
-          const destination =
-            typeof router.query.returnTo === 'string' && router.query.returnTo
-              ? router.query.returnTo
-              : `/users/${registerJson.user.id}`;
+              const destination =
+                typeof router.query.returnTo === 'string' &&
+                router.query.returnTo
+                  ? router.query.returnTo
+                  : `/users/${registerJson.user.id}`;
 
-          // props.refreshUsername();
+              // props.refreshUsername();
 
-          router.push(destination);
-        }}
-      >
-        <label>
-          Username
-          <input
-            value={username}
-            onChange={(event) => setUsername(event.currentTarget.value)}
-          />
-        </label>
-        <label>
-          First Name
-          <input
-            value={firstName}
-            onChange={(event) => setFirstName(event.currentTarget.value)}
-          />
-        </label>
-        <label>
-          Last Name
-          <input
-            value={lastName}
-            onChange={(event) => setLastName(event.currentTarget.value)}
-          />
-        </label>
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(event) => setPassword(event.currentTarget.value)}
-          />
-        </label>
+              router.push(destination);
+            }}
+          >
+            <label>
+              Username
+              <input
+                value={username}
+                onChange={(event) => setUsername(event.currentTarget.value)}
+              />
+            </label>
+            <label>
+              First Name
+              <input
+                value={firstName}
+                onChange={(event) => setFirstName(event.currentTarget.value)}
+              />
+            </label>
+            <label>
+              Last Name
+              <input
+                value={lastName}
+                onChange={(event) => setLastName(event.currentTarget.value)}
+              />
+            </label>
+            <label>
+              Password
+              <input
+                type="password"
+                value={password}
+                onChange={(event) => setPassword(event.currentTarget.value)}
+              />
+            </label>
 
-        <button>Register</button>
-      </form>
+            <button>Register</button>
+          </form>
 
-      <div css={errorsStyles}>
-        {errors.map((error) => (
-          <div key={`error-${error.message}`}>{error.message}</div>
-        ))}
-      </div>
-    </Layout>
+          <div css={errorsStyles}>
+            {errors.map((error) => (
+              <div key={`error-${error.message}`}>{error.message}</div>
+            ))}
+          </div>
+        </div>
+      </Layout>
+    </div>
   );
 }
 

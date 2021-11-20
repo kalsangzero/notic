@@ -30,7 +30,9 @@ export default async function registerHandler(req, res) {
     } else if (req.method === 'DELETE') {
       console.log('query', req.query);
       // the code for the POST request
-      const deletedBookmark = await deleteBookmarkById(Number(req.query.id));
+      const deletedBookmark = await deleteBookmarkById(
+        Number(req.query.bookmarkId),
+      );
 
       return res.status(200).json(deletedBookmark);
     } else if (req.method === 'PATCH') {
