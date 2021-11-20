@@ -18,6 +18,11 @@ const navStyle = css`
 export default function Header(props) {
   return (
     <nav css={navStyle}>
+      {props.username ? (
+        <>Logged in as {props.username} &nbsp;&nbsp;&nbsp;</>
+      ) : (
+        'Not logged in'
+      )}
       <Link href="/">
         <a>Home</a>
       </Link>
@@ -28,18 +33,22 @@ export default function Header(props) {
         <a>Videos</a>
       </Link>
       <div style={{ float: 'right', paddingRight: '56px' }}>
-        <Link href="/register">
-          <a>Register</a>
-        </Link>
-        <Link href="/users/${user.id}">
-          <a>Profile</a>
-        </Link>
-        <Link href="/login">
-          <a>Login</a>
-        </Link>
-        <Link href="/logout">
-          <a>Logout</a>
-        </Link>
+        {!props.username && (
+          <>
+            <Link href="/register">
+              <a>Register</a>
+            </Link>
+            <Link href="/login">
+              <a>Login</a>
+            </Link>
+          </>
+        )}
+
+        {props.username && (
+          <Link href="/logout">
+            <a>Logout</a>
+          </Link>
+        )}
       </div>
     </nav>
   );

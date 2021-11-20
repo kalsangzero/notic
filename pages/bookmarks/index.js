@@ -119,7 +119,9 @@ export default function Home(props) {
             onChange={(event) => setNote(event.currentTarget.value)}
           />
         </label>
-        <button onClick={createFullBookmark}>Save</button>
+        <button style={{ marginLeft: '10px' }} onClick={createFullBookmark}>
+          Save
+        </button>
       </form>
     );
   };
@@ -177,10 +179,11 @@ export default function Home(props) {
         />
         <div css={formStyles}>
           <h2>Note List</h2>
+          {showForm ? showFormFunction() : null}
           {bookmarkList.map((bookmark) => {
             return (
               <div key={`bookmark-li-${bookmark.id}`}>
-                <p style={{ margin: '0px', paddingLeft: '10px' }}>
+                <p style={{ margin: '20px 0px 0px 0px ', paddingLeft: '10px' }}>
                   <button
                     css={buttonStyle}
                     onClick={() => {

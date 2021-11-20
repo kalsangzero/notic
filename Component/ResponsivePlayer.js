@@ -205,6 +205,7 @@ export default function ResponsivePlayer(props) {
             background: 'transparent',
             cursor: 'pointer',
             padding: '5px 10px',
+            marginBottom: '20px',
           }}
           onClick={props.addBookmark}
         >

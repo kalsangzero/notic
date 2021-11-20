@@ -1,5 +1,4 @@
 import { GetServerSidePropsContext } from 'next';
-import Layout from '../Component/Layout';
 
 export default function Logout() {
   return 'Logged out';

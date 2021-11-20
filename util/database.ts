@@ -216,22 +216,20 @@ export async function deleteSessionByToken(token: string) {
 export async function insertVideo({
   videoname,
   url,
-  profileId,
 }: {
   videoname: string;
   url: string;
-  profileId: number;
 }) {
   const [video] = await sql<[Video | undefined]>`
     INSERT INTO videos
-      (videoname, url, profile_id)
+      (videoname, url)
     VALUES
-      (${videoname}, ${url}, ${profileId})
+      (${videoname}, ${url})
     RETURNING
       id,
       videoname,
-      url,
-      profile_id
+      url
+
 
   `;
   return video && camelcaseKeys(video);
@@ -285,7 +283,6 @@ export async function updateVideoById(
   {
     videoname,
     url,
-    profileId,
   }: {
     videoname: string;
     url: string;
@@ -297,15 +294,13 @@ export async function updateVideoById(
       videos
     SET
       videoname = ${videoname},
-      url = ${url},
-      profile_id = ${profileId}
+      url = ${url}
     WHERE
       id = ${id}
     RETURNING
       id,
       videoname,
-      url,
-      profile_id
+      url
 
   `;
   return video && camelcaseKeys(video);
@@ -350,7 +345,7 @@ export async function getBookmarks() {
 }
 
 export async function getBookmark(id: number) {
-  const [bookmark] = await sql<[Bookmark]>`
+  const [bookmark] = await sql<[Bookmarks]>`
       SELECT
       id,
       bookamrkname,
@@ -365,7 +360,7 @@ export async function getBookmark(id: number) {
 }
 
 export async function deleteBookmarkById(id: number) {
-  const [bookmark] = await sql<[Bookmark | undefined]>`
+  const [bookmark] = await sql<[Bookmarks | undefined]>`
     DELETE FROM
       bookmarks
     WHERE
@@ -392,7 +387,7 @@ export async function updateBookmarkById(
     note: string;
   },
 ) {
-  const [bookmark] = await sql<[Bookmark | undefined]>`
+  const [bookmark] = await sql<[Bookmarks | undefined]>`
     UPDATE
       bookmarks
     SET

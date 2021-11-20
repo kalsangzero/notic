@@ -70,7 +70,7 @@ export default function LoginPage(props: { refreshUsername: () => void }) {
                 ? router.query.returnTo
                 : `/users/${loginJson.user.id}`;
 
-            // props.refreshUsername();
+            props.refreshUsername();
 
             router.push(destination);
           }}

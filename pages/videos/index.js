@@ -45,7 +45,7 @@ export default function RegisterPage(props) {
   const [videoname, setVideoname] = useState('');
 
   const [url, setUrl] = useState('');
-  const [profileId, setProfileId] = useState('');
+
   const [errors, setErrors] = useState([]);
   const router = useRouter();
 
@@ -55,7 +55,7 @@ export default function RegisterPage(props) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ videoname, url, profileId }),
+      body: JSON.stringify({ videoname, url }),
     });
 
     const video = await videoResponse.json();
@@ -100,14 +100,7 @@ export default function RegisterPage(props) {
             onChange={(event) => setUrl(event.currentTarget.value)}
           />
         </label>
-        <label>
-          profile ID
-          <br />
-          <input
-            value={profileId}
-            onChange={(event) => setProfileId(event.currentTarget.value)}
-          />
-        </label>
+
         <button onClick={() => createVideo()}>Register</button>
       </form>
 

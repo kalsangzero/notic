@@ -23,12 +23,6 @@ export default async function registerHandler(req, res) {
     return; // return right away
   }
 
-  if (!req.body.profileId) {
-    res.status(400).send({
-      errors: [{ message: 'Please insert Id' }],
-    });
-    return; // return right away
-  }
   // if (!req.body.csrfToken || !verifyCsrfToken(req.body.csrfToken)) {
   //   res.status(400).send({
   //     errors: [{ message: 'Request does not contain valid CSRF token' }],
@@ -47,7 +41,6 @@ export default async function registerHandler(req, res) {
       const createdVideo = await insertVideo({
         videoname: body.videoname,
         url: body.url,
-        profileId: body.profileId,
       });
       if (!createdVideo) {
         res.status(500).send({ errors: [{ message: 'Video not create' }] });
@@ -67,7 +60,6 @@ export default async function registerHandler(req, res) {
       const updatedVideo = await updateVideoById(Number(query.videoId), {
         videoname: body.videoame,
         url: body.url,
-        profileId: body.profileId,
       });
 
       return res.status(200).json(updatedVideo);

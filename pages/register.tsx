@@ -82,7 +82,7 @@ export default function RegisterPage(props: Props) {
                   ? router.query.returnTo
                   : `/users/${registerJson.user.id}`;
 
-              // props.refreshUsername();
+              props.refreshUsername();
 
               router.push(destination);
             }}
