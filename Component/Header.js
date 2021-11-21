@@ -17,39 +17,40 @@ const navStyle = css`
 
 export default function Header(props) {
   return (
-    <nav css={navStyle}>
-      {props.username ? (
-        <>Logged in as {props.username} &nbsp;&nbsp;&nbsp;</>
-      ) : (
-        'Not logged in'
-      )}
-      <Link href="/">
-        <a>Home</a>
-      </Link>
-      <Link href="/contact">
-        <a>Contact</a>
-      </Link>
-      <Link href="/videos">
-        <a>Videos</a>
-      </Link>
-      <div style={{ float: 'right', paddingRight: '56px' }}>
-        {!props.username && (
-          <>
-            <Link href="/register">
-              <a>Register</a>
-            </Link>
-            <Link href="/login">
-              <a>Login</a>
-            </Link>
-          </>
-        )}
+    <header>
+      <nav css={navStyle}>
+        <Link href="/">
+          <a>Home</a>
+        </Link>
+        <Link href="/contact">
+          <a>Contact</a>
+        </Link>
+        <Link href="/videos">
+          <a>Videos</a>
+        </Link>
+        <div style={{ float: 'right', paddingRight: '56px' }}>
+          {!props.username && (
+            <>
+              <Link href="/register">
+                <a>Register</a>
+              </Link>
+              <Link href="/login">
+                <a>Login</a>
+              </Link>
+            </>
+          )}
 
-        {props.username && (
-          <Link href="/logout">
-            <a>Logout</a>
-          </Link>
-        )}
-      </div>
-    </nav>
+          {
+            // Nextlink only logsout at refresh
+            props.username && (
+              <>
+                <a>{props.username}</a>
+                <a href="/logout">Logout</a>
+              </>
+            )
+          }
+        </div>
+      </nav>
+    </header>
   );
 }

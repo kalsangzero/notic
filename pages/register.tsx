@@ -29,10 +29,10 @@ const errorsStyles = css`
   color: red;
 `;
 
-// type Props = {
-//   refreshUsername: () => void;
-//   // csrfToken: string
-// };
+type Props = {
+  refreshUsername: () => void;
+  csrfToken: string;
+};
 
 export default function RegisterPage(props: Props) {
   const [username, setUsername] = useState('');
@@ -63,7 +63,7 @@ export default function RegisterPage(props: Props) {
                   password: password,
                   firstName: firstName,
                   lastName: lastName,
-                  // csrfToken: props.csrfToken,
+                  csrfToken: props.csrfToken,
                 }),
               });
 
@@ -133,6 +133,7 @@ export default function RegisterPage(props: Props) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { getValidSessionByToken } = await import('../util/database');
+  const { createToken } = await import('../util/csrf');
 
   // Redirect from HTTP to HTTPS on Heroku
   if (
@@ -168,7 +169,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      // csrfToken: createToken(),
+      csrfToken: createToken(),
     },
   };
 }

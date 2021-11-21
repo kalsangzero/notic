@@ -6,7 +6,7 @@ import Layout from '../../Component/Layout';
 
 export default function User(props) {
   return (
-    <Layout>
+    <Layout username={props.username}>
       <Head>
         <title>single user</title>
       </Head>

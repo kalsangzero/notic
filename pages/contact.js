@@ -1,9 +1,9 @@
 import Head from 'next/head';
 import Layout from '../Component/Layout';
 
-export default function Contact() {
+export default function Contact(props) {
   return (
-    <Layout>
+    <Layout username={props.username}>
       <div>
         <Head>
           <title>Contact Page</title>

@@ -4,7 +4,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../Component/Layout';
 
-export default function Home() {
+export default function Home(props) {
   const frontPage = css`
     justify-content: center;
     text-align: center;
@@ -37,8 +37,7 @@ export default function Home() {
 
   return (
     <div css={frontPage}>
-      <CssBaseline />
-      <Layout>
+      <Layout username={props.username}>
         <Head>
           <title>Home Page</title>
         </Head>

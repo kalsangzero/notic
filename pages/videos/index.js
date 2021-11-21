@@ -75,7 +75,7 @@ export default function RegisterPage(props) {
     setVideoList(newState);
   }
   return (
-    <Layout>
+    <Layout username={props.username}>
       <h1>Create a VideoBookmark</h1>
 
       <form

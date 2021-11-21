@@ -2,8 +2,7 @@ import crypto from 'node:crypto';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { hashPassword } from '../../util/auth';
 import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
-// import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
-// import { verifyCsrfToken } from '../../util/csrf';
+import { verifyCsrfToken } from '../../util/csrf';
 import {
   createSession,
   deleteExpiredSessions,
@@ -42,12 +41,12 @@ export default async function registerHandler(
     });
     return; // return right away
   }
-  // if (!req.body.csrfToken || !verifyCsrfToken(req.body.csrfToken)) {
-  //   res.status(400).send({
-  //     errors: [{ message: 'Request does not contain valid CSRF token' }],
-  //   });
-  //   return;
-  // }
+  if (!req.body.csrfToken || !verifyCsrfToken(req.body.csrfToken)) {
+    res.status(400).send({
+      errors: [{ message: 'Request does not contain valid CSRF token' }],
+    });
+    return;
+  }
 
   try {
     const username = req.body.username;
@@ -90,7 +89,7 @@ export default async function registerHandler(
 
     const cookie = createSerializedRegisterSessionTokenCookie(newSession.token);
 
-    res.status(200).setHeader('Set-Cookie', cookie).send({ user: user });
+    res.status(200).setHeader('set-Cookie', cookie).send({ user: user });
   } catch (err) {
     res.status(500).send({ errors: [{ message: (err as Error).message }] });
   }

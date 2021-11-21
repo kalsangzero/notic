@@ -165,7 +165,7 @@ export default function Home(props) {
   //   setBookmarkList(newState);
   // }
   return (
-    <Layout>
+    <Layout username={props.username}>
       <Head>
         <title>Notic</title>
         <meta name="description" content="created by Kalsang" />

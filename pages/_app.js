@@ -1,4 +1,4 @@
-import { GlobalStyles } from '@mui/material';
+import { css, Global } from '@emotion/react';
 import Head from 'next/head';
 import { useCallback, useEffect, useState } from 'react';
 
@@ -22,8 +22,19 @@ export default function MyApp({ Component, pageProps }) {
   }, [refreshUsername]);
 
   return (
-    <div>
-      <GlobalStyles />
+    <>
+      <Global
+        styles={css`
+          *,
+          *::before,
+          *::after {
+            box-sizing: border-box;
+          }
+          body {
+            margin: 0;
+          }
+        `}
+      />
       <Head>
         <link rel="icon" href="/favicon2.png" />
       </Head>
@@ -32,6 +43,6 @@ export default function MyApp({ Component, pageProps }) {
         username={username}
         refreshUsername={refreshUsername}
       />
-    </div>
+    </>
   );
 }
