@@ -106,7 +106,7 @@ export default function Home(props) {
             />
           </label>
         </h1>
-        <p style={{ margin: '0px', paddingLeft: '10px' }}>{time}</p>
+        <p style={{ margin: '0px', paddingLeft: '12px' }}>{time}</p>
 
         <label>
           <textarea

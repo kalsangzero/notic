@@ -14,6 +14,8 @@ const frontPage = css`
   background-size: cover;
   background-repeat: no-repeat;
   color: white;
+  width: 100%;
+  height: 100%;
 `;
 
 const registercss = css`
@@ -63,7 +65,7 @@ export default function RegisterPage(props: Props) {
                   password: password,
                   firstName: firstName,
                   lastName: lastName,
-                  csrfToken: props.csrfToken,
+                  // csrfToken: props.csrfToken,
                 }),
               });
 
@@ -169,7 +171,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   return {
     props: {
-      csrfToken: createToken(),
+      // csrfToken: createToken(),
     },
   };
 }

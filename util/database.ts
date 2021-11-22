@@ -261,7 +261,6 @@ export async function getVideo(id: number) {
       `;
   return camelcaseKeys(video);
 }
-
 export async function deleteVideoById(id: number) {
   const [video] = await sql<[Video | undefined]>`
     DELETE FROM
@@ -304,6 +303,37 @@ export async function updateVideoById(
 
   `;
   return video && camelcaseKeys(video);
+}
+
+export async function getVideosByUserIdAndSessionToken(
+  userId: number,
+  sessionToken: string | undefined,
+) {
+  if (!sessionToken) return [];
+
+  // Call another database function and then return early in case
+  // the session doesn't exist
+  //
+  // This could be adapted for usage with an "admin" type role
+  const session = await getValidSessionByToken(sessionToken);
+
+  if (!session) {
+    return [];
+  }
+
+  const videos = await sql<Video[]>`
+    SELECT
+      videos.id,
+      videos.videoname,
+      videos.url
+    FROM
+      users,
+      videoss
+    WHERE
+      users.id = ${userId} AND
+      videos.profile_id = users.id
+  `;
+  return videos.map((video) => camelcaseKeys(video));
 }
 
 export async function insertBookmark({
