@@ -5,9 +5,10 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import {
   deleteBookmarkById,
   getBookmarks,
+  getVideo,
   insertBookmark,
   updateBookmarkById,
-} from '../../../util/database';
+} from '../../../../../util/database';
 
 export default async function registerHandler(req, res) {
   try {
@@ -31,7 +32,7 @@ export default async function registerHandler(req, res) {
       console.log('query', req.query);
       // the code for the POST request
       const deletedBookmark = await deleteBookmarkById(
-        Number(req.query.bookmarkId),
+        Number(req.query.videoId),
       );
 
       return res.status(200).json(deletedBookmark);
@@ -45,6 +46,11 @@ export default async function registerHandler(req, res) {
       });
 
       return res.status(200).json(updatedBookmark);
+    }
+
+    if (req.method === 'GET') {
+      const video = await getVideo(Number(req.query.videoId));
+      res.status(200).json(video);
     }
 
     return res.status(405);

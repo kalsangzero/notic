@@ -1,8 +1,12 @@
+// index.html bookmarks
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import crypto from 'node:crypto';
+import { NextApiRequest, NextApiResponse } from 'next';
 import {
   deleteBookmarkById,
   getBookmark,
   updateBookmarkById,
-} from '../../../util/database';
+} from '../../../../../util/database';
 
 export default async function handler(req, res) {
   console.log('query', req.query);

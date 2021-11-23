@@ -1,8 +1,10 @@
+// Single video
+
 import {
   deleteVideoById,
   getVideo,
   updateVideoById,
-} from '../../../util/database';
+} from '../../../../util/database';
 
 export default async function handler(req, res) {
   console.log('query', req.query);

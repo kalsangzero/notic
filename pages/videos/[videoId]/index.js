@@ -8,8 +8,8 @@ import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRef, useState } from 'react';
-import Layout from '../../Component/Layout';
-import ResponsivePlayer from '../../Component/ResponsivePlayer';
+import Layout from '../../../Component/Layout';
+import ResponsivePlayer from '../../../Component/ResponsivePlayer';
 
 const videoPage = css`
   display: flex;
@@ -59,7 +59,7 @@ export default function Home(props) {
   const router = useRouter();
 
   const createFullBookmark = async () => {
-    const bookmarkResponse = await fetch('/api/bookmarks', {
+    const bookmarkResponse = await fetch(`/api/videos/${props.video.id}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -106,7 +106,7 @@ export default function Home(props) {
             />
           </label>
         </h1>
-        <p style={{ margin: '0px', paddingLeft: '12px' }}>{time}</p>
+        <p style={{ margin: '0px', paddingLeft: '10px' }}>{time}</p>
 
         <label>
           <textarea
@@ -127,12 +127,15 @@ export default function Home(props) {
   };
 
   async function deleteBookmark(id) {
-    const bookmarkResponse = await fetch(`/api/bookmarks/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
+    const bookmarkResponse = await fetch(
+      `/api/videos/${props.video.id}/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
       },
-    });
+    );
 
     const deletedBookmark = await bookmarkResponse.json();
     const newState = bookmarkList.filter(
@@ -215,17 +218,17 @@ export default function Home(props) {
   );
 }
 export async function getServerSideProps() {
-  const { getBookmarks } = await import('../../util/database');
-  // const { getVideo } = await import('../../util/database');
+  const { getBookmarks } = await import('../../../util/database');
+  const { getVideo } = await import('../../../util/database');
 
-  // const video = await getVideo(context.query.videoId);
+  const video = await getVideo(context.query.videoId);
 
   const bookmarks = await getBookmarks();
 
   return {
     props: {
       bookmarks,
-      // video,
+      video,
     },
   };
 }
