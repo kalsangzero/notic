@@ -48,7 +48,7 @@ export default function Home(props) {
   const [bookmarkname, setBookmarkname] = useState('');
   const [note, setNote] = useState('');
   const [time, setTime] = useState('TimeMark');
-  const [videoUrl, setVideoUrl] = useState('https://youtu.be/-iun6KPT4SM');
+  const [videoUrl, setVideoUrl] = useState(props.video.url);
   const playerRef = useRef();
   const controlsRef = useRef();
   const canvasRef = useRef();
@@ -217,14 +217,14 @@ export default function Home(props) {
     </Layout>
   );
 }
-export async function getServerSideProps() {
+export async function getServerSideProps(context) {
   const { getBookmarks } = await import('../../../util/database');
   const { getVideo } = await import('../../../util/database');
 
   const video = await getVideo(context.query.videoId);
 
   const bookmarks = await getBookmarks();
-
+  console.log('database video.url', video);
   return {
     props: {
       bookmarks,

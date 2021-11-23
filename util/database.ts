@@ -236,7 +236,7 @@ export async function insertVideo({
 }
 
 export async function getVideos() {
-  const videos = await sql<User[]>`
+  const videos = await sql<Video[]>`
       SELECT
          id,
          videoname
@@ -250,10 +250,11 @@ export async function getVideos() {
 }
 
 export async function getVideo(id: number) {
-  const [video] = await sql<[User]>`
+  const [video] = await sql<[Video]>`
       SELECT
       id,
-      videoname
+      videoname,
+      url
       FROM
       videos
       Where
