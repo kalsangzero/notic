@@ -1,4 +1,3 @@
-import { Bookmark } from '@mui/icons-material';
 import camelcaseKeys from 'camelcase-keys';
 import dotenvSafe from 'dotenv-safe';
 import postgres from 'postgres';
@@ -21,13 +20,12 @@ export type Video = {
   profileId: number;
 };
 
-export type Bookmarks = {
+export type Bookmark = {
   id: number;
   bookmarkname: string;
   time: string;
   note: string;
   videoId: number;
-  videoUrl: string;
 };
 export type UserWithPasswordHash = User & {
   password_hash: string;
@@ -316,7 +314,7 @@ export async function insertBookmark({
   note: string;
   time: string;
 }) {
-  const [bookmark] = await sql<[Bookmarks | undefined]>`
+  const [bookmark] = await sql<[Bookmark | undefined]>`
     INSERT INTO bookmarks
       (bookmarkname,  note, time)
     VALUES
@@ -330,7 +328,7 @@ export async function insertBookmark({
 }
 
 export async function getBookmarks() {
-  const bookmarks = await sql<Bookmarks[]>`
+  const bookmarks = await sql<Bookmark[]>`
       SELECT
          id,
          bookmarkname,
@@ -346,7 +344,7 @@ export async function getBookmarks() {
 }
 
 export async function getBookmark(id: number) {
-  const [bookmark] = await sql<[Bookmarks]>`
+  const [bookmark] = await sql<[Bookmark]>`
       SELECT
       id,
       bookamrkname,
@@ -361,7 +359,7 @@ export async function getBookmark(id: number) {
 }
 
 export async function deleteBookmarkById(id: number) {
-  const [bookmark] = await sql<[Bookmarks | undefined]>`
+  const [bookmark] = await sql<[Bookmark | undefined]>`
     DELETE FROM
       bookmarks
     WHERE
@@ -371,9 +369,7 @@ export async function deleteBookmarkById(id: number) {
       bookmarkname,
       time,
       note,
-      video_id,
-      video_url
-
+      video_id
   `;
   return bookmark && camelcaseKeys(bookmark);
 }
@@ -388,7 +384,7 @@ export async function updateBookmarkById(
     note: string;
   },
 ) {
-  const [bookmark] = await sql<[Bookmarks | undefined]>`
+  const [bookmark] = await sql<[Bookmark | undefined]>`
     UPDATE
       bookmarks
     SET

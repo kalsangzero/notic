@@ -1,21 +1,21 @@
-// Single video
+// Single bookmark
 
 import {
   deleteBookmarkById,
   getBookmark,
   updateBookmarkById,
-} from '../../../../util/database';
+} from '../../../../../util/database';
 
 export default async function registerHandler(req, res) {
   try {
     if (req.method === 'GET') {
-      const bookmark = await getBookmark(Number(req.query.videoId));
+      const bookmark = await getBookmark(Number(req.query.bookmarkId));
       res.status(200).json(bookmark);
     } else if (req.method === 'DELETE') {
       console.log('query', req.query);
       // the code for the POST request
       const deletedBookmark = await deleteBookmarkById(
-        Number(req.query.videoId),
+        Number(req.query.bookmarkId),
       );
 
       return res.status(200).json(deletedBookmark);

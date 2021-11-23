@@ -128,7 +128,7 @@ export default function Home(props) {
 
   async function deleteBookmark(id) {
     const bookmarkResponse = await fetch(
-      `/api/videos/${props.video.id}/${id}`,
+      `/api/videos/${props.video.id}/bookmarks/${id}`,
       {
         method: 'DELETE',
         headers: {
@@ -224,7 +224,7 @@ export async function getServerSideProps(context) {
   const video = await getVideo(context.query.videoId);
 
   const bookmarks = await getBookmarks();
-  console.log('database video.url', video);
+
   return {
     props: {
       bookmarks,

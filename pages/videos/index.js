@@ -155,7 +155,6 @@ export default function RegisterPage(props) {
 
 export async function getServerSideProps() {
   const { getVideos } = await import('../../util/database');
-  console.log(getVideos);
   const videos = await getVideos();
 
   return {

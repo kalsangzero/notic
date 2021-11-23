@@ -1,4 +1,4 @@
-// Single video
+// Single video and getbookmarks
 
 import {
   deleteBookmarkById,
