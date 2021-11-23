@@ -33,7 +33,7 @@ const errorsStyles = css`
 
 type Props = {
   refreshUsername: () => void;
-  csrfToken: string;
+  // csrfToken: string;
 };
 
 export default function RegisterPage(props: Props) {

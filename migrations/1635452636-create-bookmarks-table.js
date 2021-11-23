@@ -5,7 +5,7 @@ exports.up = async function up(sql) {
  		bookmarkname varchar(40) UNIQUE,
     time varchar(60),
 		note varchar(1000),
-		video_id integer REFERENCES users (id) ON DELETE CASCADE
+		video_id integer REFERENCES videos (id) ON DELETE CASCADE
 	);`;
 };
 

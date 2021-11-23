@@ -57,7 +57,7 @@ export default function Home(props) {
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState([]);
   const router = useRouter();
-
+  const videoId = props.video.id;
   const createFullBookmark = async () => {
     const bookmarkResponse = await fetch(`/api/videos/${props.video.id}`, {
       method: 'POST',
@@ -68,6 +68,7 @@ export default function Home(props) {
         bookmarkname: bookmarkname,
         note: note,
         time: time,
+        videoId: videoId,
       }),
     });
     const bookmark = await bookmarkResponse.json();

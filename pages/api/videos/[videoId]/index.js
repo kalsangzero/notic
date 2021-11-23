@@ -42,6 +42,7 @@ export default async function registerHandler(req, res) {
         bookmarkname: body.bookmarkname,
         note: body.note,
         time: body.time,
+        videoId: body.videoId,
       });
       if (!createdBookmark) {
         res.status(500).send({ errors: [{ message: 'Bookmark not create' }] });

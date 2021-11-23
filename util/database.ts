@@ -309,20 +309,23 @@ export async function insertBookmark({
   bookmarkname,
   note,
   time,
+  videoId,
 }: {
   bookmarkname: string;
   note: string;
   time: string;
+  videoId: number;
 }) {
   const [bookmark] = await sql<[Bookmark | undefined]>`
     INSERT INTO bookmarks
-      (bookmarkname,  note, time)
+      (bookmarkname,  note, time, video_id)
     VALUES
-     (${bookmarkname}, ${note}, ${time})
+     (${bookmarkname}, ${note}, ${time}, ${videoId})
     RETURNING
     bookmarkname,
     note,
-    time
+    time,
+    video_id
   `;
   return bookmark && camelcaseKeys(bookmark);
 }
