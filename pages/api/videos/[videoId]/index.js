@@ -33,8 +33,8 @@ export default async function registerHandler(req, res) {
       return res.status(200).json(updatedVideo);
     }
 
-    const bookmarks = await getBookmarks();
     if (req.method === 'GET') {
+      const bookmarks = await getBookmarks();
       return res.status(200).json(bookmarks);
     } else if (req.method === 'POST') {
       const body = req.body;

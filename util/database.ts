@@ -336,7 +336,8 @@ export async function getBookmarks() {
          id,
          bookmarkname,
          note,
-         time
+         time,
+         video_id
       FROM
          bookmarks
          `;
@@ -354,7 +355,7 @@ export async function getBookmark(id: number) {
       note,
       time
       FROM
-      videos
+      bookmarks
       Where
       id =${id}
       `;
@@ -401,4 +402,27 @@ export async function updateBookmarkById(
       note
   `;
   return bookmark && camelcaseKeys(bookmark);
+}
+
+export async function getBookmarksByVideoId(id: number) {
+  const bookmarks = await sql<Bookmark[]>`
+     SELECT
+   bookmarks.id,
+   bookmarks.note,
+   bookmarks.bookmarkname,
+   bookmarks.time,
+   videos.id as video_id
+  FROM
+   videos,
+   bookmarks
+  WHERE
+   bookmarks.video_id = videos.id
+  AND
+    videos.id = ${id}
+;
+`;
+  // console.log('proooo', products);
+  return bookmarks.map((bookmark) => {
+    return camelcaseKeys(bookmark);
+  });
 }

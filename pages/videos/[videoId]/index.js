@@ -1,12 +1,5 @@
 import { css, jsx } from '@emotion/react';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import EditIcon from '@mui/icons-material/Edit';
-import { useRouter } from 'next/dist/client/router';
 import Head from 'next/head';
-import Link from 'next/link';
 import { useRef, useState } from 'react';
 import Layout from '../../../Component/Layout';
 import ResponsivePlayer from '../../../Component/ResponsivePlayer';
@@ -52,13 +45,14 @@ export default function Home(props) {
   const playerRef = useRef();
   const controlsRef = useRef();
   const canvasRef = useRef();
-  const [bookmarks, setBookmarks] = useState([]);
+
   const [showForm, setShowForm] = useState(false);
   const [editMode, setEditMode] = useState(false);
   const [errors, setErrors] = useState([]);
-  const router = useRouter();
+
   const videoId = props.video.id;
-  const createFullBookmark = async () => {
+
+  async function createFullBookmark() {
     const bookmarkResponse = await fetch(`/api/videos/${props.video.id}`, {
       method: 'POST',
       headers: {
@@ -76,9 +70,10 @@ export default function Home(props) {
       setErrors(bookmark.errors);
       return;
     }
-    const newState = { ...bookmarkList, bookmark };
+    const newState = [...bookmarkList, bookmark];
     setBookmarkList(newState);
-  };
+    setShowForm(false);
+  }
 
   const addBookmark = () => {
     setShowForm(true);
@@ -120,7 +115,10 @@ export default function Home(props) {
             onChange={(event) => setNote(event.currentTarget.value)}
           />
         </label>
-        <button style={{ marginLeft: '10px' }} onClick={createFullBookmark}>
+        <button
+          style={{ marginLeft: '10px' }}
+          onClick={() => createFullBookmark()}
+        >
           Save
         </button>
       </form>
@@ -137,7 +135,6 @@ export default function Home(props) {
         },
       },
     );
-
     const deletedBookmark = await bookmarkResponse.json();
     const newState = bookmarkList.filter(
       (bookmark) => bookmark.id !== deletedBookmark.id,
@@ -184,6 +181,7 @@ export default function Home(props) {
         <div css={formStyles}>
           <h2>Note List</h2>
           {showForm ? showFormFunction() : null}
+          {console.log('boooklist', bookmarkList)}
           {bookmarkList.map((bookmark) => {
             return (
               <div key={`bookmark-li-${bookmark.id}`}>
@@ -219,13 +217,13 @@ export default function Home(props) {
   );
 }
 export async function getServerSideProps(context) {
-  const { getBookmarks } = await import('../../../util/database');
+  const { getBookmarksByVideoId } = await import('../../../util/database');
   const { getVideo } = await import('../../../util/database');
 
   const video = await getVideo(context.query.videoId);
 
-  const bookmarks = await getBookmarks();
-
+  const bookmarks = await getBookmarksByVideoId(context.query.videoId);
+  console.log('bookmarkvideo', bookmarks);
   return {
     props: {
       bookmarks,

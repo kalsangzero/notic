@@ -1,7 +1,6 @@
 import { css } from '@emotion/react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { GetServerSidePropsContext } from 'next';
-import { useRouter } from 'next/dist/client/router';
 import Link from 'next/link';
 import { useState } from 'react';
 import Layout from '../../Component/Layout';
@@ -47,7 +46,6 @@ export default function RegisterPage(props) {
   const [url, setUrl] = useState('');
 
   const [errors, setErrors] = useState([]);
-  const router = useRouter();
 
   async function createVideo() {
     const videoResponse = await fetch(`/api/videos`, {
