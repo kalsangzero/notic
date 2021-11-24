@@ -4,6 +4,15 @@ import { useRef, useState } from 'react';
 import Layout from '../../../Component/Layout';
 import ResponsivePlayer from '../../../Component/ResponsivePlayer';
 
+const frontPage = css`
+  background-image: url('/code.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: white;
+  width: 100%;
+  height: 100%;
+`;
 const videoPage = css`
   display: flex;
   position: relative;
@@ -17,6 +26,7 @@ const buttonStyle = css`
 
 const inputBox = css`
   margin: 5px 0 5px 10px;
+  color: black;
   width: 600px;
   height: 100px;
   border-radius: 5px;
@@ -166,54 +176,58 @@ export default function Home(props) {
   //   setBookmarkList(newState);
   // }
   return (
-    <Layout username={props.username}>
-      <Head>
-        <title>Notic</title>
-        <meta name="description" content="created by Kalsang" />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <div css={videoPage}>
-        <ResponsivePlayer
-          url={videoUrl}
-          playerRef={playerRef}
-          addBookmark={addBookmark}
-        />
-        <div css={formStyles}>
-          <h2>Note List</h2>
-          {showForm ? showFormFunction() : null}
-          {console.log('boooklist', bookmarkList)}
-          {bookmarkList.map((bookmark) => {
-            return (
-              <div key={`bookmark-li-${bookmark.id}`}>
-                <p style={{ margin: '20px 0px 0px 0px ', paddingLeft: '10px' }}>
-                  <button
-                    css={buttonStyle}
-                    onClick={() => {
-                      playerRef.current.seekTo(bookmark.time);
-                    }}
+    <main css={frontPage}>
+      <Layout username={props.username}>
+        <Head>
+          <title>Notic</title>
+          <meta name="description" content="created by Kalsang" />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <div css={videoPage}>
+          <ResponsivePlayer
+            url={videoUrl}
+            playerRef={playerRef}
+            addBookmark={addBookmark}
+          />
+          <div css={formStyles}>
+            <h2 style={{ paddingLeft: '10px' }}>{props.video.videoname}</h2>
+            {showForm ? showFormFunction() : null}
+            {console.log('boooklist', bookmarkList)}
+            {bookmarkList.map((bookmark) => {
+              return (
+                <div key={`bookmark-li-${bookmark.id}`}>
+                  <p
+                    style={{ margin: '20px 0px 0px 0px ', paddingLeft: '10px' }}
                   >
-                    <span style={{ marginRight: '20px', fontSize: '16px' }}>
-                      {bookmark.bookmarkname}
-                    </span>
-                    {bookmark.time}
-                  </button>
+                    <button
+                      css={buttonStyle}
+                      onClick={() => {
+                        playerRef.current.seekTo(bookmark.time);
+                      }}
+                    >
+                      <span style={{ marginRight: '20px', fontSize: '16px' }}>
+                        {bookmark.bookmarkname}
+                      </span>
+                      {bookmark.time}
+                    </button>
 
-                  <button
-                    style={{ float: 'right', marginRight: '90px' }}
-                    onClick={() => {
-                      deleteBookmark(bookmark.id);
-                    }}
-                  >
-                    remove
-                  </button>
-                </p>
-                <p css={inputBox}>{bookmark.note}</p>
-              </div>
-            );
-          })}
+                    <button
+                      style={{ float: 'right', marginRight: '90px' }}
+                      onClick={() => {
+                        deleteBookmark(bookmark.id);
+                      }}
+                    >
+                      remove
+                    </button>
+                  </p>
+                  <p css={inputBox}>{bookmark.note}</p>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-    </Layout>
+      </Layout>
+    </main>
   );
 }
 export async function getServerSideProps(context) {

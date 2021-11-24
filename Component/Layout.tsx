@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import Footer from './Footer';
 import Header from './Header';
 
 type Props = {
@@ -9,9 +10,10 @@ type Props = {
 
 export default function Layout(props: Props) {
   return (
-    <div>
+    <>
       <Header username={props.username} />
       <main>{props.children}</main>
-    </div>
+      <Footer />
+    </>
   );
 }

@@ -156,11 +156,13 @@ export default function ResponsivePlayer(props) {
               >
                 {paused === true ? (
                   <PauseRounded
+                    style={{ color: 'white' }}
                     sx={{ fontSize: '2rem' }}
                     htmlColor={mainIconColor}
                   />
                 ) : (
                   <PlayArrowRounded
+                    style={{ color: 'white' }}
                     sx={{ fontSize: '2rem' }}
                     htmlColor={mainIconColor}
                   />
@@ -172,11 +174,13 @@ export default function ResponsivePlayer(props) {
               >
                 {muted === true || volume === 0 ? (
                   <VolumeOffIcon
+                    style={{ color: 'white' }}
                     sx={{ fontSize: '2rem' }}
                     htmlColor={mainIconColor}
                   />
                 ) : (
                   <VolumeUpIcon
+                    style={{ color: 'white' }}
                     sx={{ fontSize: '2rem' }}
                     htmlColor={mainIconColor}
                   />
@@ -189,7 +193,7 @@ export default function ResponsivePlayer(props) {
                 onChangeCommitted={onVolumeSeekUp}
                 min={0}
                 max={100}
-                style={{ width: '70px', paddingTop: '3px' }}
+                style={{ width: '70px', paddingTop: '3px', color: 'white' }}
               />
             </span>
             <p>
@@ -206,6 +210,7 @@ export default function ResponsivePlayer(props) {
             cursor: 'pointer',
             padding: '5px 10px',
             marginBottom: '20px',
+            color: 'white',
           }}
           onClick={props.addBookmark}
         >

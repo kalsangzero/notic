@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import Link from 'next/link';
 
 const navStyle = css`
-  padding: 30px 54px;
+  padding: 30px 72px;
   a {
     color: #f2f2f2;
     text-align: center;

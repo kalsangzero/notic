@@ -12,22 +12,33 @@ const productLayout = css`
   flex-wrap: wrap;
 `;
 const heading = css`
+  margin: 50px 0 0 0;
   font: bold;
   justify-content: center;
   text-align: center;
   font-size: 32px;
 `;
+
+const frontPage = css`
+  justify-content: center;
+  text-align: center;
+  background-image: url('/space.jpg');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  color: white;
+  width: 100%;
+  height: 100%;
+`;
+
 const singleImage = css`
   display: flex;
-  padding: 10px;
+  padding: 0px 30px;
   margin: 24px;
   position: relative;
   border-radius: 5px;
   background-color: rgb(255, 255, 255);
   border: 2px solid rgb(229, 232, 235);
-  :hover {
-    box-shadow: 5px 10px 8px 5px #888888;
-  }
 `;
 const formStyles = css`
   label {
@@ -73,81 +84,83 @@ export default function RegisterPage(props) {
     setVideoList(newState);
   }
   return (
-    <Layout username={props.username}>
-      <h1>Create a VideoBookmark</h1>
+    <main css={frontPage}>
+      <Layout username={props.username}>
+        <form
+          css={formStyles}
+          onSubmit={async (event) => {
+            event.preventDefault();
+          }}
+        >
+          <h1>Create a VideoBookmark</h1>
+          <label>
+            Video Name:
+            <br />
+            <input
+              value={videoname}
+              onChange={(event) => setVideoname(event.currentTarget.value)}
+            />
+          </label>
+          <label>
+            url:
+            <br />
+            <input
+              value={url}
+              onChange={(event) => setUrl(event.currentTarget.value)}
+            />
+          </label>
 
-      <form
-        css={formStyles}
-        onSubmit={async (event) => {
-          event.preventDefault();
-        }}
-      >
-        <label>
-          Video Name:
-          <br />
-          <input
-            value={videoname}
-            onChange={(event) => setVideoname(event.currentTarget.value)}
-          />
-        </label>
-        <label>
-          url:
-          <br />
-          <input
-            value={url}
-            onChange={(event) => setUrl(event.currentTarget.value)}
-          />
-        </label>
+          <button onClick={() => createVideo()}>Register</button>
+        </form>
 
-        <button onClick={() => createVideo()}>Register</button>
-      </form>
-
-      <div css={errorsStyles}>
-        {errors.map((error) => (
-          <div key={`error-${error.message}`}>{error.message}</div>
-        ))}
-      </div>
-
-      <h2 css={heading}>Video List</h2>
-      <div css={productLayout}>
-        {/* props is collected from userServersite with name as userList
+        <div css={errorsStyles}>
+          {errors.map((error) => (
+            <div key={`error-${error.message}`}>{error.message}</div>
+          ))}
+        </div>
+        <div>
+          <h2 css={heading}>Video List</h2>
+          <div css={productLayout}>
+            {/* props is collected from userServersite with name as userList
         and here we use props which has name userList and then map each ..which is shown in the list */}
-        {videoList.map((video) => {
-          // actually props.liked user
-          return (
-            <div key={`user-li-${video.id}`}>
-              <div css={singleImage}>
-                <br />
-                <Link href={`/videos/${video.id}`}>
-                  <a>
-                    <img
-                      style={{ borderRadius: '5px' }}
-                      src={`/${video.name}.gif`}
-                      alt={video.videoname}
+            {videoList.map((video) => {
+              // actually props.liked user
+              return (
+                <div key={`user-li-${video.id}`}>
+                  <div css={singleImage}>
+                    <br />
+                    <Link href={`/videos/${video.id}`}>
+                      <a
+                        style={{
+                          textDecoration: 'none',
+                          color: 'black',
+                        }}
+                      >
+                        <p>{video.videoname}</p>
+                      </a>
+                    </Link>
+                  </div>
+                  <button
+                    onClick={() => {
+                      deleteVideo(video.id);
+                    }}
+                  >
+                    <DeleteForeverIcon
+                      style={{
+                        width: '20px',
+                        height: '30px',
+                        padding: '0px',
+                        margin: '0px',
+                      }}
                     />
-                    <p>{video.videoname}</p>
-                  </a>
-                </Link>
-              </div>
-              <button
-                onClick={() => {
-                  deleteVideo(video.id);
-                }}
-              >
-                <DeleteForeverIcon
-                  style={{
-                    width: '20px',
-                    height: '30px',
-                    padding: '0px',
-                    margin: '0px',
-                  }}
-                />
-              </button>
-            </div>
-          );
-        })}
-      </div>
-    </Layout>
+                  </button>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </Layout>
+    </main>
   );
 }
 

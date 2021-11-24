@@ -9,7 +9,7 @@ import { RegisterResponse } from './api/register';
 const frontPage = css`
   justify-content: center;
   text-align: center;
-  background-image: url('/registration.jpg');
+  background-image: url('/front.jpg');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -19,18 +19,39 @@ const frontPage = css`
 `;
 
 const registercss = css`
-  margin: 300px 0;
+  margin: 130px 0;
 `;
 const formStyles = css`
   label {
     display: block;
   }
 `;
+const buttoncss = css`
+  padding: 10px 20px;
+  font-size: 19px;
+  margin-top: 10px;
+  border-radius: 5px;
+`;
 
 const errorsStyles = css`
   color: red;
 `;
 
+const labelcss = css`
+  margin: 10px 0 0 0;
+  font-size: 18px;
+  input {
+    margin-left: 15px;
+    padding: 10px 5px;
+    outline: none;
+    border: 1px solid #8c8f94;
+    border-radius: 10px;
+  }
+
+  input:focus {
+    border-color: #16056b;
+  }
+`;
 type Props = {
   refreshUsername: () => void;
   // csrfToken: string;
@@ -45,7 +66,7 @@ export default function RegisterPage(props: Props) {
   const router = useRouter();
 
   return (
-    <div css={frontPage}>
+    <main css={frontPage}>
       <Layout>
         <div css={registercss}>
           <h1>Register</h1>
@@ -89,28 +110,28 @@ export default function RegisterPage(props: Props) {
               router.push(destination);
             }}
           >
-            <label>
+            <label css={labelcss}>
               Username
               <input
                 value={username}
                 onChange={(event) => setUsername(event.currentTarget.value)}
               />
             </label>
-            <label>
+            <label css={labelcss}>
               First Name
               <input
                 value={firstName}
                 onChange={(event) => setFirstName(event.currentTarget.value)}
               />
             </label>
-            <label>
+            <label css={labelcss}>
               Last Name
               <input
                 value={lastName}
                 onChange={(event) => setLastName(event.currentTarget.value)}
               />
             </label>
-            <label>
+            <label css={labelcss}>
               Password
               <input
                 type="password"
@@ -119,7 +140,7 @@ export default function RegisterPage(props: Props) {
               />
             </label>
 
-            <button>Register</button>
+            <button css={buttoncss}>Register</button>
           </form>
 
           <div css={errorsStyles}>
@@ -129,7 +150,7 @@ export default function RegisterPage(props: Props) {
           </div>
         </div>
       </Layout>
-    </div>
+    </main>
   );
 }
 
