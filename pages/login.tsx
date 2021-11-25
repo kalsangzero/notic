@@ -56,7 +56,10 @@ const buttoncss = css`
   border-radius: 5px;
 `;
 
-export default function LoginPage(props: { refreshUsername: () => void }) {
+export default function LoginPage(props: {
+  refreshUsername: () => void;
+  baseUrl: string;
+}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>([]);
@@ -72,7 +75,7 @@ export default function LoginPage(props: { refreshUsername: () => void }) {
             onSubmit={async (event) => {
               event.preventDefault();
 
-              const loginResponse = await fetch('/api/login', {
+              const loginResponse = await fetch(`${props.baseUrl}/api/login`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -94,7 +97,7 @@ export default function LoginPage(props: { refreshUsername: () => void }) {
                 typeof router.query.returnTo === 'string' &&
                 router.query.returnTo
                   ? router.query.returnTo
-                  : `/users/${loginJson.user.id}`;
+                  : `${props.baseUrl}/users/${loginJson.user.id}`;
 
               props.refreshUsername();
 
@@ -135,6 +138,8 @@ export default function LoginPage(props: { refreshUsername: () => void }) {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const baseUrl = process.env.BASE_URL;
+
   const { getValidSessionByToken } = await import('../util/database');
 
   // Redirect from HTTP to HTTPS on Heroku
@@ -170,6 +175,6 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   }
 
   return {
-    props: {},
+    props: baseUrl,
   };
 }
