@@ -1,13 +1,13 @@
-Welcome to notic! 
+Welcome to Notic
 
-Create Bookmarks on  videos wth timestamps. Take notes and
+Create bookmarks on  videos wth timestamps. Take notes and
 watch them. Ever wished to know the exact time where a Professor
 in video lecture told students about a specific topic? Notic allows
 you to bookmark Timestamps across the Video with a single tap and
 easily take notes on the side and save it for future reference. 
 You can revisit videos timestamp again. You will never miss
 a particular topic taught bookmarked Video with notic. 
-Notic is easy Video Bookmarking. 
+Notic is easy Video bookmarking. 
 Enjoy notic!
 
 
