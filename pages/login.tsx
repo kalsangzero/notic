@@ -9,7 +9,7 @@ import { LoginResponse } from './api/login';
 const frontPage = css`
   justify-content: center;
   text-align: center;
-  background-image: url('/no.jpg');
+  background-image: url('/front.jpg');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;

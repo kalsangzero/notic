@@ -45,7 +45,11 @@ export default function Header(props) {
             props.username && (
               <>
                 <a>{props.username}</a>
-                <a href="/logout">Logout</a>
+                <Link href="/logout">
+                  <a>Logout</a>
+                </Link>
+
+                {/* for display last project use this  <a href="/logout">Logout</a> */}
               </>
             )
           }

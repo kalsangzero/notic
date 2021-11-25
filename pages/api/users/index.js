@@ -1,5 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import { createUser, getUsers } from '../../../util/database';
+import { getUsers, insertUser } from '../../../util/database';
 
 export default async function handler(req, res) {
   // console.log('query', req.query);
@@ -13,9 +13,11 @@ export default async function handler(req, res) {
     const body = req.body;
 
     // the code for the POST request
-    const createdUser = await createUser({
-      name: body.userName,
-      favoriteColor: body.userColor,
+    const createdUser = await insertUser({
+      username: body.userName,
+      passwordHash: body.passwordHash,
+      firstName: body.firstName,
+      lastName: body.lastName,
     });
 
     return res.status(200).json(createdUser);
