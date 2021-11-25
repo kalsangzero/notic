@@ -9,7 +9,7 @@ import { RegisterResponse } from './api/register';
 const frontPage = css`
   justify-content: center;
   text-align: center;
-  background-image: url('/front.jpg');
+  background-image: url('/no.jpg');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
@@ -156,7 +156,7 @@ export default function RegisterPage(props: Props) {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   const { getValidSessionByToken } = await import('../util/database');
-  const { createToken } = await import('../util/csrf');
+  // const { createToken } = await import('../util/csrf');
 
   // Redirect from HTTP to HTTPS on Heroku
   if (

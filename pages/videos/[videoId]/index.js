@@ -1,5 +1,6 @@
-import { css, jsx } from '@emotion/react';
+import { css } from '@emotion/react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { useRef, useState } from 'react';
 import Layout from '../../../Component/Layout';
 import ResponsivePlayer from '../../../Component/ResponsivePlayer';
@@ -51,14 +52,13 @@ export default function Home(props) {
   const [bookmarkname, setBookmarkname] = useState('');
   const [note, setNote] = useState('');
   const [time, setTime] = useState('TimeMark');
-  const [videoUrl, setVideoUrl] = useState(props.video.url);
+  const [videoUrl] = useState(props.video.url);
   const playerRef = useRef();
-  const controlsRef = useRef();
-  const canvasRef = useRef();
+  const router = useRouter();
 
   const [showForm, setShowForm] = useState(false);
-  const [editMode, setEditMode] = useState(false);
-  const [errors, setErrors] = useState([]);
+
+  const [setErrors] = useState([]);
 
   const videoId = props.video.id;
 
@@ -82,7 +82,16 @@ export default function Home(props) {
     }
     const newState = [...bookmarkList, bookmark];
     setBookmarkList(newState);
+
     setShowForm(false);
+    setBookmarkname('');
+    setNote('');
+    router.reload();
+  }
+  function cancelproceed() {
+    setShowForm(false);
+    setBookmarkname('');
+    setNote('');
   }
 
   const addBookmark = () => {
@@ -93,7 +102,7 @@ export default function Home(props) {
     return (
       <form
         onSubmit={async (event) => {
-          event.preventDefault();
+          await event.preventDefault();
         }}
       >
         <h1
@@ -130,6 +139,9 @@ export default function Home(props) {
           onClick={() => createFullBookmark()}
         >
           Save
+        </button>
+        <button style={{ marginLeft: '10px' }} onClick={() => cancelproceed()}>
+          Cancel
         </button>
       </form>
     );

@@ -5,11 +5,9 @@ import PauseRounded from '@mui/icons-material/PauseRounded';
 import PlayArrowRounded from '@mui/icons-material/PlayArrowRounded';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
-import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import { useTheme } from '@mui/material/styles';
-import React, { useState } from 'react';
-import { findDOMNode } from 'react-dom';
+import { useState } from 'react';
 import ReactPlayer from 'react-player/lazy';
 
 const playerWrapper = css`
@@ -66,7 +64,7 @@ export default function ResponsivePlayer(props) {
     setSeeking(false);
     props.playerRef.current.seekTo(parseFloat(e.target.value, 'fraction'));
   };
-  const handleSeekMouseDown = (e) => {
+  const handleSeekMouseDown = () => {
     setSeeking(true);
   };
 

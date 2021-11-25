@@ -2,7 +2,7 @@ import crypto from 'node:crypto';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { hashPassword } from '../../util/auth';
 import { createSerializedRegisterSessionTokenCookie } from '../../util/cookies';
-import { verifyCsrfToken } from '../../util/csrf';
+// import { verifyCsrfToken } from '../../util/csrf';
 import {
   createSession,
   deleteExpiredSessions,

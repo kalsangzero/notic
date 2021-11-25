@@ -1,6 +1,5 @@
 import { css } from '@emotion/react';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { GetServerSidePropsContext } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
 import Layout from '../../Component/Layout';
@@ -12,7 +11,7 @@ const productLayout = css`
   flex-wrap: wrap;
 `;
 const heading = css`
-  margin: 50px 0 0 0;
+  margin: 64px 0 0 0;
   font: bold;
   justify-content: center;
   text-align: center;
@@ -56,7 +55,7 @@ export default function RegisterPage(props) {
 
   const [url, setUrl] = useState('');
 
-  const [errors, setErrors] = useState([]);
+  const [errors] = useState([]);
 
   async function createVideo() {
     const videoResponse = await fetch(`/api/videos`, {
@@ -70,6 +69,8 @@ export default function RegisterPage(props) {
     const video = await videoResponse.json();
     const newSate = [...videoList, video];
     setVideoList(newSate);
+    setVideoname('');
+    setUrl('');
   }
   async function deleteVideo(id) {
     const videosResponse = await fetch(`/api/videos/${id}`, {
@@ -89,10 +90,10 @@ export default function RegisterPage(props) {
         <form
           css={formStyles}
           onSubmit={async (event) => {
-            event.preventDefault();
+            await event.preventDefault();
           }}
         >
-          <h1>Create a VideoBookmark</h1>
+          <h1 css={heading}>Create a VideoBookmark</h1>
           <label>
             Video Name:
             <br />
@@ -110,7 +111,9 @@ export default function RegisterPage(props) {
             />
           </label>
 
-          <button onClick={() => createVideo()}>Register</button>
+          <button style={{ marginTop: '10px' }} onClick={() => createVideo()}>
+            Register
+          </button>
         </form>
 
         <div css={errorsStyles}>

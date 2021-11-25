@@ -1,5 +1,4 @@
 import { css } from '@emotion/react';
-import { CssBaseline } from '@mui/material';
 import Head from 'next/head';
 import Link from 'next/link';
 import Layout from '../Component/Layout';
@@ -18,7 +17,7 @@ export default function Home(props) {
     justify-content: center;
     text-align: center;
     padding: 50px;
-    margin: 160px 50px 40px;
+    margin: 160px 30px 10px;
   `;
   const buttontype = css`
     margin: 24px;
@@ -60,10 +59,10 @@ export default function Home(props) {
             fontSize: '20px',
           }}
         >
-          Ever stumbled upon an awesome video and cannot watch it immediately?
-          Notic allows you to bookmark Timestamps across the Video with a single
-          tap and easily take notes on the side and save it for future
-          reference.
+          Ever wished to know the exact time where a Professor in video lecture
+          told students about a specific topic? Notic allows you to bookmark
+          Timestamps across the Video with a single tap and easily take notes on
+          the side and save it for future reference.
         </p>
 
         <br />
@@ -83,14 +82,12 @@ export default function Home(props) {
           to search the video later. Even Save link or Watch it later options on
           sites require multiple taps to save or retrieve the videos when you
           are ready to watch them. With notic you can bookmark videos with a
-          single tap using our browser extensions for Chrome. The currently
-          supported sites where you can Notic videos easily are publicly
-          viewable videos on Facebook, YouTube, Vimeo, Dailymotion and Reddit.
-          Lookout for the Notic Button to the video title. All recently
-          bookmarked videos will show up in your device in a seperatesection.
-          You can revisit videos timestamp again and also edit the notes. You
-          will never miss aparticular topic taught bookmarked Video with notic.
-          Notic is easy Video Bookmarking. Enjoy notic!
+          single tap using our the Bookmark Icon on the page. Lookout for the
+          Notic Button to the video title. All recently bookmarked videos will
+          show up in your device in a seperate section. You can revisit videos
+          timestamp again and also edit the notes. You will never miss
+          aparticular topic taught bookmarked Video with notic. Notic is easy
+          Video Bookmarking. Enjoy notic!
         </p>
         <Link href="/users">
           <a css={buttontype}>VideosMarker</a>
