@@ -1,34 +1,24 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+Welcome to notic! 
+Create Bookmarks on  videos wth timestamps. Take notes and
+watch them. Ever wished to know the exact time where a Professor
+in video lecture told students about a specific topic? Notic allows
+you to bookmark Timestamps across the Video with a single tap and
+easily take notes on the side and save it for future reference. 
+You can revisit videos timestamp again. You will never miss
+a particular topic taught bookmarked Video with notic. 
+Notic is easy Video Bookmarking. 
+Enjoy notic!
+
+
 
 ## Getting Started
 
-First, run the development server:
+![git1](https://user-images.githubusercontent.com/88326876/143438055-55b8cd43-a5eb-4abc-9ede-0dbef197d295.png)
+![git2](https://user-images.githubusercontent.com/88326876/143438066-cff95335-cf0b-41a6-acf5-452b7dddc942.png)
+![git3](https://user-images.githubusercontent.com/88326876/143438075-f6a1ab50-f2fb-471e-8411-97ea0b971d2a.png)
+![git4](https://user-images.githubusercontent.com/88326876/143438084-f7bb69a2-b581-4296-a2be-2dd390a69c6d.png)
+![git5](https://user-images.githubusercontent.com/88326876/143438089-21328ab2-6a92-4c3d-89c5-788e795e11b7.png)
+![git6](https://user-images.githubusercontent.com/88326876/143438101-7234a79d-d084-4663-b725-2869d6312a65.png)
 
-```bash
-npm run dev
-# or
-yarn dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
-
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
-
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Contact me through Linkedin https://www.linkedin.com/in/kalsangzero/
