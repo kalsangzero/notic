@@ -3,6 +3,7 @@ import dotenvSafe from 'dotenv-safe';
 import postgres from 'postgres';
 import setPostgresDefaultsOnHeroku from './node-heroku-postgres-env-vars';
 
+setPostgresDefaultsOnHeroku();
 // // readin the environment variables
 // // in the .env file, making it possible
 // // to connect to PostgresSQL
@@ -38,10 +39,6 @@ export type Session = {
   userId: number;
   expiryTimestamp: Date;
 };
-
-setPostgresDefaultsOnHeroku();
-dotenvSafe.config();
-
 // connect toPostgresSQL on local host
 // const sql = postgres();
 // sql`SELECT 1;`.then((result) => console.log(result));
@@ -50,17 +47,26 @@ dotenvSafe.config();
 // to get data from real database using function
 // Type needed for the connection function below
 
-// Type needed for the connection function below
+dotenvSafe.config();
 
+// Type needed for the connection function below
 declare module globalThis {
   let postgresSqlClient: ReturnType<typeof postgres> | undefined;
 }
 
-export function connectOneTimeToDatabase() {
+// Connect only once to the database
+// https://github.com/vercel/next.js/issues/7811#issuecomment-715259370
+function connectOneTimeToDatabase() {
   let sql;
+
   if (process.env.NODE_ENV === 'production') {
+    // Heroku needs SSL connections but
+    // has an "unauthorized" certificate
+    // https://devcenter.heroku.com/changelog-items/852
     sql = postgres({ ssl: { rejectUnauthorized: false } });
   } else {
+    // When we're in development, make sure that we connect only
+    // once to the database
     if (!globalThis.postgresSqlClient) {
       globalThis.postgresSqlClient = postgres();
     }
@@ -69,6 +75,7 @@ export function connectOneTimeToDatabase() {
   return sql;
 }
 
+// Connect to PostgreSQL
 const sql = connectOneTimeToDatabase();
 
 // USER
