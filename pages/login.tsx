@@ -171,10 +171,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         destination: '/',
         permanent: false,
       },
+      props: { baseUrl: baseUrl },
     };
   }
 
   return {
-    props: baseUrl,
+    props: { baseUrl: baseUrl },
   };
 }
