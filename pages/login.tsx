@@ -75,7 +75,7 @@ export default function LoginPage(props: {
             onSubmit={async (event) => {
               event.preventDefault();
 
-              const loginResponse = await fetch(`${props.baseUrl}/api/login`, {
+              const loginResponse = await fetch(`/api/login`, {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -171,11 +171,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
         destination: '/',
         permanent: false,
       },
-      props: { baseUrl: baseUrl },
     };
   }
 
   return {
-    props: { baseUrl: baseUrl },
+    props: {},
   };
 }
