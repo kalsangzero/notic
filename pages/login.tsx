@@ -56,10 +56,7 @@ const buttoncss = css`
   border-radius: 5px;
 `;
 
-export default function LoginPage(props: {
-  refreshUsername: () => void;
-  baseUrl: string;
-}) {
+export default function LoginPage(props: { refreshUsername: () => void }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errors, setErrors] = useState<Errors>([]);
