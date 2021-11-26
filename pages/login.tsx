@@ -75,7 +75,7 @@ export default function LoginPage(props: {
             onSubmit={async (event) => {
               event.preventDefault();
 
-              const loginResponse = await fetch(`/api/login`, {
+              const loginResponse = await fetch('/api/login', {
                 method: 'POST',
                 headers: {
                   'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ export default function LoginPage(props: {
                 typeof router.query.returnTo === 'string' &&
                 router.query.returnTo
                   ? router.query.returnTo
-                  : `${props.baseUrl}/users/${loginJson.user.id}`;
+                  : `/users/${loginJson.user.id}`;
 
               props.refreshUsername();
 
@@ -138,8 +138,6 @@ export default function LoginPage(props: {
 }
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const baseUrl = process.env.BASE_URL;
-
   const { getValidSessionByToken } = await import('../util/database');
 
   // Redirect from HTTP to HTTPS on Heroku
